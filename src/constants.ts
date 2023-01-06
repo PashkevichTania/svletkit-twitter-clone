@@ -1,3 +1,3 @@
 export const CONST = {
-    title: 'Twitttr 🐦️'
+  title: 'Twitttr 🐦️'
 }
