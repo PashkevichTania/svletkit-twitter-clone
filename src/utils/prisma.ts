@@ -1,4 +1,4 @@
-import prisma from '../../Downloads/sveltekit-for-beginners-main/src/lib/prisma'
+import prisma from '$lib/prisma'
 import { timePosted } from 'src/utils/date'
 
 export async function getTweets() {
@@ -86,12 +86,14 @@ export async function createTweet(request: Request) {
 
 export async function removeTweet(request: Request) {
 	const form = await request.formData()
+	console.log(form)
 	const tweetId = +form.get('id')
 	await prisma.tweet.delete({ where: { id: tweetId } })
 }
 
 export async function likeTweet(request: Request) {
 	const form = await request.formData()
+	console.log(form)
 	const id = +form.get('id')
 
 	// verify if tweet is already liked

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition'
 
-	import { enhance } from '$root/lib/form'
-	import Icon from '$root/components/icon.svelte'
-	import type { TweetType } from '$root/types'
+	import { enhance } from 'src/lib/form'
+	import Icon from 'src/components/icon.svelte'
+	import type { TweetType } from 'src/types'
 
 	export let tweet: TweetType
 

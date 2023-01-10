@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$root/lib/form'
+	import { enhance } from 'src/lib/form'
 
 	let tweet = ''
 	let maxCharacters = 140

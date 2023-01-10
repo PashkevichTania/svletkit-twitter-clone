@@ -8,6 +8,7 @@
 </script>
 
 <div class="compose">
+<!--	TODO: user-->
 	<img src="/profile/matia/avatar.webp" alt="Avatar" />
 	<form
 		action="/home"

@@ -9,7 +9,7 @@
 
 <style>
   .error {
-    height: 100vh;
+    height: 100%;
     display: grid;
     gap: var(--spacing-32);
     place-content: center;
@@ -18,7 +18,7 @@
   }
 
   .error-status {
-    font-size: 15rem;
+    font-size: 13rem;
     font-weight: bold;
     color: #c81010;
     text-align: center;
