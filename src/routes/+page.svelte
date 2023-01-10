@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-  <title>{CONST.title}</title>
+  <title>{CONST.title + CONST.icon}</title>
 </svelte:head>
 
 <main
@@ -13,12 +13,12 @@
   out:fly={{ x: -100, duration: 250 }}
 >
   <section class="hero">
-    <h1 class="title">{CONST.title}</h1>
-    <p class="text">Share your hot take with everyone.</p>
+    <h1 class="title">{CONST.title + CONST.icon}</h1>
+    <p class="text">Share your cringe takes with everyone.</p>
   </section>
 
   <section class="login">
-    <a class="btn" href="/home">🔥 Share Your Hot Take</a>
+    <a class="btn" href="/home">🔥 Share Cringe</a>
   </section>
 </main>
 
