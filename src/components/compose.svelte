@@ -11,8 +11,8 @@
 <!--	TODO: user-->
 	<img src="/profile/matia/avatar.webp" alt="Avatar" />
 	<form
-		action="/home"
-		method="post"
+		action="/api/tweets"
+		method="POST"
 		autocomplete="off"
 		use:enhance={{ result: ({ form }) => form.reset() }}
 	>
