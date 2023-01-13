@@ -14,7 +14,10 @@ export const GET: RequestHandler = async () => {
   }
 
   return new Response(JSON.stringify(tweets), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'max-age=0, s-maxage=60',
+    },
     status: 200
   })
 }
@@ -24,12 +27,16 @@ export const POST: RequestHandler = async ({ request }) => {
   try {
     await createTweet(request)
     response = new Response('Success', {
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       status: 200
     })
   } catch (e) {
     response = new Response(getErroMessage(e), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json'
+      },
       status: 500
     })
   }
@@ -40,8 +47,7 @@ export const POST: RequestHandler = async ({ request }) => {
 export const DELETE: RequestHandler = async ({ request }) => {
   await removeTweet(request)
 
-  return new Response('', {
-    status: 303,
-    headers: { location: '/home' }
+  return new Response('Success', {
+    status: 200,
   })
 }

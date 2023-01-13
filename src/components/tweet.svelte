@@ -8,8 +8,8 @@
 
     export let tweet: TweetType
 
-    const deleteHandel = (id: number) => {
-        fetch(`/api/tweets/?id=${id}`, {
+    const deleteHandel = async (id: number) => {
+        await fetch(`/api/tweets?id=${id}`, {
             method: 'DELETE'
         })
         invalidate('/home')

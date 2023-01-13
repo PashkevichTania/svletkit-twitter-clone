@@ -8,6 +8,7 @@
 </script>
 
 <div class="compose">
+<!--	TODO: -->
 	<img src="/profile/matia/avatar.webp" alt="Avatar" />
 	<!-- we pass a function to reset the form -->
 	<form

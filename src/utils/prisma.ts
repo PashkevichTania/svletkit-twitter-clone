@@ -49,6 +49,7 @@ export async function getTweet(params: Record<string, string>) {
 
 export async function getLikedTweets() {
   const liked = await prisma.liked.findMany({
+    //todo
     where: { userId: 1 },
     select: { tweetId: true }
   })
@@ -78,6 +79,7 @@ export async function createTweet(request: Request) {
       url: Math.random().toString(16).slice(2),
       content: tweet,
       likes: 0,
+      //todo
       user: { connect: { id: 1 } }
     }
   })
@@ -111,7 +113,7 @@ export async function likeTweet(request: Request) {
 
     await prisma.tweet.update({
       where: { id },
-      data: { likes: (count.likes -= 1) }
+      data: { likes: (count!.likes -= 1) }
     })
 
     return {
@@ -126,6 +128,7 @@ export async function likeTweet(request: Request) {
   await prisma.liked.create({
     data: {
       tweetId: id,
+      //todo
       user: { connect: { id: 1 } }
     }
   })
@@ -138,7 +141,7 @@ export async function likeTweet(request: Request) {
 
   await prisma.tweet.update({
     where: { id },
-    data: { likes: (count.likes += 1) }
+    data: { likes: (count!.likes += 1) }
   })
 }
 
@@ -148,6 +151,7 @@ export async function getUserProfile(params: Record<string, string>) {
   })
 
   const tweets = await prisma.tweet.findMany({
+    //todo
     where: { user: { id: 1 } },
     include: { user: true },
     orderBy: { posted: 'desc' }
