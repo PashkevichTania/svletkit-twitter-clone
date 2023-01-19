@@ -1,18 +1,28 @@
 <script lang="ts">
+    import { PUBLIC_BASE_URL } from '$env/static/public';
+
     import {fade, fly} from 'svelte/transition'
 
     import {enhance} from 'src/lib/form'
     import Icon from 'src/components/icon.svelte'
     import type {TweetType} from 'src/types'
-    import {invalidate} from "$app/navigation";
+    import {createMutation, useQueryClient} from "@tanstack/svelte-query";
 
     export let tweet: TweetType
 
-    const deleteHandel = async (id: number) => {
-        await fetch(`/api/tweets?id=${id}`, {
+    const client = useQueryClient()
+
+    const deleteMutation = createMutation(
+        (id: number) => fetch(`${PUBLIC_BASE_URL}/api/tweets?id=${id}`, {
             method: 'DELETE'
-        })
-        invalidate('/home')
+        }),
+        {
+            onSuccess: () => client.invalidateQueries(['tweets']),
+        },
+    )
+
+    const deleteHandel = (id: number) => {
+        $deleteMutation.mutate(id)
     }
 </script>
 

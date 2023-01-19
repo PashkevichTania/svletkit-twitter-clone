@@ -38,6 +38,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@prisma/client": "^4.8.1"
+    "@prisma/client": "^4.8.1",
+    "@tanstack/svelte-query": "^4.22.2"
   }
 }

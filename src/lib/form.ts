@@ -1,52 +1,53 @@
-import { invalidate } from '$app/navigation'
-import { page } from '$app/stores'
+import { useQueryClient } from '@tanstack/svelte-query'
+// import { page } from '$app/stores'
+// import { invalidate } from '$app/navigation'
 
 type Parameters = {
-	result?: ({ form }: { form: HTMLFormElement }) => void
+  result?: ({ form }: { form: HTMLFormElement }) => void
 }
 type Destroy = { destroy: () => void }
-type Enhance = (
-	form?: HTMLFormElement,
-	{ result }?: Parameters
-) => Destroy
+type Enhance = (form?: HTMLFormElement, { result }?: Parameters) => Destroy
 
 export const enhance: Enhance = (form, { result } = {}) => {
-	let invalidatePath: URL
+  async function handleSubmit(event: Event) {
+    if (!form) return
 
-	page.subscribe((path) => {
-		invalidatePath = path.url
-	})
+    // let invalidatePath: URL
+    // page.subscribe((path) => {
+    //   invalidatePath = path.url
+    // })
 
-	async function handleSubmit(event: Event) {
-		event.preventDefault()
+    const client = useQueryClient()
+    event.preventDefault()
 
-		const response = await fetch(form.action, {
-			method: form.method,
-			headers: { accept: 'application/json' },
-			body: new FormData(form)
-		})
+    const response = await fetch(form.action, {
+      method: form.method,
+      headers: { accept: 'application/json' },
+      body: new FormData(form)
+    })
 
-		if (!response.ok) {
-			console.error(await response.text())
-		}
+    if (!response.ok) {
+      console.error(await response.text())
+    }
 
-		// rerun load function
-		const url = new URL(invalidatePath)
-		url.search = ''
-		url.hash = ''
-		invalidate(url.href)
+    client.invalidateQueries(['tweets'])
 
-		// reset the form
-		if (result) {
-			result({ form })
-		}
-	}
+    // const url = new URL(invalidatePath)
+    // url.search = ''
+    // url.hash = ''
+    // invalidate(url.href)
 
-	form.addEventListener('submit', handleSubmit)
+    // reset the form
+    if (result) {
+      result({ form })
+    }
+  }
 
-	return {
-		destroy() {
-			form.removeEventListener('submit', handleSubmit)
-		}
-	}
+  form?.addEventListener('submit', handleSubmit)
+
+  return {
+    destroy() {
+      form?.removeEventListener('submit', handleSubmit)
+    }
+  }
 }

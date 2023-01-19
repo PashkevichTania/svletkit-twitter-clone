@@ -15,8 +15,7 @@ export const GET: RequestHandler = async () => {
 
   return new Response(JSON.stringify(tweets), {
     headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'max-age=0, s-maxage=60',
+      'Content-Type': 'application/json'
     },
     status: 200
   })
@@ -28,7 +27,7 @@ export const POST: RequestHandler = async ({ request }) => {
     await createTweet(request)
     response = new Response('Success', {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       status: 200
     })
@@ -48,6 +47,6 @@ export const DELETE: RequestHandler = async ({ request }) => {
   await removeTweet(request)
 
   return new Response('Success', {
-    status: 200,
+    status: 200
   })
 }
