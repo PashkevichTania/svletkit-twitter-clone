@@ -1,7 +1,7 @@
 import prisma from '$lib/prisma'
 import { timePosted } from 'src/utils/date'
 import { error } from '@sveltejs/kit'
-import type { TweetType } from 'src/types'
+import type { TweetType, UserProfile } from 'src/types'
 
 export async function getTweets(): Promise<TweetType[]> {
   const tweets = await prisma.tweet.findMany({
@@ -50,7 +50,8 @@ export async function getTweet(params: Record<string, string>): Promise<TweetTyp
 
 export async function getLikedTweets() {
   const liked = await prisma.liked.findMany({
-    //todo
+    // TODO: 
+    // todo
     where: { userId: 1 },
     select: { tweetId: true }
   })
@@ -141,7 +142,7 @@ export async function likeTweet(request: Request) {
   })
 }
 
-export async function getUserProfile(params: Record<string, string>) {
+export async function getUserProfile(params: Record<string, string>): Promise<UserProfile | { status: 404 }> {
   const profile = await prisma.user.findFirst({
     where: { name: params.user }
   })
@@ -159,7 +160,7 @@ export async function getUserProfile(params: Record<string, string>) {
     return { status: 404 }
   }
 
-  const userTweets = tweets.map((tweet) => {
+  const userTweets: TweetType[] = tweets.map((tweet) => {
     return {
       id: tweet.id,
       content: tweet.content,

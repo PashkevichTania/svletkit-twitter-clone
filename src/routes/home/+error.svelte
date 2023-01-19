@@ -4,7 +4,7 @@
 
 <div class="error">
   <h1 class="error-status">{$page.status}</h1>
-  <p class="error-message">{$page.error.message}</p>
+  <p class="error-message">{$page.error?.message}</p>
 </div>
 
 <style>

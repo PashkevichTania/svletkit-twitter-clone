@@ -1,3 +1,5 @@
+import type { User } from "@prisma/client"
+
 export type TweetType = {
   id: number
   content: string
@@ -9,3 +11,8 @@ export type TweetType = {
   name: string
   liked: boolean
 }
+
+export type UserProfile = { 
+  profile: User
+  tweets: TweetType[]
+ }
