@@ -41,6 +41,5 @@ created by tutotial: https://joyofcode.xyz/sveltekit-for-beginners
 
 https://youtube.com/playlist?list=PLA9WiRZ-IS_zXZZyW4qfj0akvOAtk6MFS
 
-
-1) npx prisma db push
-2) npx prisma db seed
+1. npx prisma db push
+2. npx prisma db seed

@@ -1,8 +1,9 @@
 import prisma from '$lib/prisma'
 import { timePosted } from 'src/utils/date'
 import { error } from '@sveltejs/kit'
+import type { TweetType } from 'src/types'
 
-export async function getTweets() {
+export async function getTweets(): Promise<TweetType[]> {
   const tweets = await prisma.tweet.findMany({
     include: { user: true },
     orderBy: { posted: 'desc' }
@@ -25,7 +26,7 @@ export async function getTweets() {
   })
 }
 
-export async function getTweet(params: Record<string, string>) {
+export async function getTweet(params: Record<string, string>): Promise<TweetType | null> {
   const tweet = await prisma.tweet.findFirst({
     where: { url: params.tweetId },
     include: { user: true }
@@ -54,6 +55,8 @@ export async function getLikedTweets() {
     select: { tweetId: true }
   })
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return Object.keys(liked).map((key) => liked[key].tweetId)
 }
 
@@ -87,14 +90,14 @@ export async function createTweet(request: Request) {
 
 export async function removeTweet(request: Request) {
   const params = new URL(request.url).searchParams
-  const tweetId = +params.get('id')!
+  const tweetId = +(params.get('id') || 1)
   await prisma.tweet.delete({ where: { id: tweetId } })
 }
 
 export async function likeTweet(request: Request) {
   const form = await request.formData()
   console.log('likeTweet', form)
-  const id = +form.get('id')!
+  const id = +(form.get('id') || 1)
 
   // verify if tweet is already liked
   const liked = await prisma.liked.count({
@@ -106,22 +109,15 @@ export async function likeTweet(request: Request) {
     await prisma.liked.delete({ where: { tweetId: id } })
 
     // update the likes count
-    const count = await prisma.tweet.findUnique({
+    const count = (await prisma.tweet.findUnique({
       where: { id },
       select: { likes: true }
-    })
+    })) || { likes: 0 }
 
     await prisma.tweet.update({
       where: { id },
-      data: { likes: (count!.likes -= 1) }
+      data: { likes: (count.likes -= 1) }
     })
-
-    return {
-      status: 303,
-      headers: {
-        location: '/home'
-      }
-    }
   }
 
   // add liked record
@@ -134,14 +130,14 @@ export async function likeTweet(request: Request) {
   })
 
   // get the current like count and update it
-  const count = await prisma.tweet.findUnique({
+  const count = (await prisma.tweet.findUnique({
     where: { id },
     select: { likes: true }
-  })
+  })) || { likes: 0 }
 
   await prisma.tweet.update({
     where: { id },
-    data: { likes: (count!.likes += 1) }
+    data: { likes: (count.likes += 1) }
   })
 }
 
