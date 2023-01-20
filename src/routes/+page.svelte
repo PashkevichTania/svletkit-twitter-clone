@@ -6,8 +6,7 @@
 
   import { page } from "$app/stores"
 
-  $: console.debug($page)
-  $: console.debug($page.data.session)
+  $: user = $page.data.session?.user
 </script>
 
 <svelte:head>
@@ -25,13 +24,44 @@
   </section>
 
   <section class="login">
-    <button on:click={() => signOut()} class="button">Sign out</button>
-    <button on:click={() => signIn("github")}>Sign In with GitHub</button>
-    <a class="btn" href="/home">🔥 Share Cringe</a>
+    {#if user}
+      <div class="user">
+        <div class="user-data">
+          <img class="hero" src={user.image} alt="user avatar">
+          <h2>{user.name}</h2>
+        </div>
+        <button class="btn" on:click={() => signOut()}>Sign out</button>
+      </div>
+      <a class="btn" href="/home">🔥 Share Cringe</a>
+    {:else}
+      <h2>Please sign in to share cringe</h2>
+      <button class="btn" on:click={() => signIn("github")}>Sign In with GitHub</button>
+    {/if}
   </section>
 </main>
 
 <style>
+  img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 25px;
+  }
+
+  .user-data{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+  }
+
+  .user {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+  }
+
   .container {
     height: 100vh;
     display: grid;

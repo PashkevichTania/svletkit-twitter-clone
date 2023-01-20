@@ -6,7 +6,7 @@
     {#if provider.callbackUrl}
         <input type="hidden" name="callbackUrl" value={provider.callbackUrl} />
     {/if}
-    <button type="submit" class="button">
+    <button type="submit">
         <slot>Sign in with {provider.name}</slot>
     </button>
 </form>
