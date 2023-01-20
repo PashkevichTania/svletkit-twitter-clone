@@ -1,6 +1,13 @@
 <script lang="ts">
   import { fly } from 'svelte/transition'
   import { CONST } from 'src/constants'
+
+  import { signIn, signOut } from "@auth/sveltekit/client"
+
+  import { page } from "$app/stores"
+
+  $: console.debug($page)
+  $: console.debug($page.data.session)
 </script>
 
 <svelte:head>
@@ -18,6 +25,8 @@
   </section>
 
   <section class="login">
+    <button on:click={() => signOut()} class="button">Sign out</button>
+    <button on:click={() => signIn("github")}>Sign In with GitHub</button>
     <a class="btn" href="/home">🔥 Share Cringe</a>
   </section>
 </main>

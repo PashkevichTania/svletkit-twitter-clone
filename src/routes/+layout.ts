@@ -1,7 +1,9 @@
 import { browser } from '$app/environment'
 import { QueryClient } from '@tanstack/svelte-query'
+import type { LayoutLoad } from '../../.svelte-kit/types/src/routes/$types'
 
-export const load = async () => {
+export const load: LayoutLoad = async (event) => {
+  const session = event.data.session
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -10,5 +12,5 @@ export const load = async () => {
     }
   })
 
-  return { queryClient }
+  return { queryClient, session }
 }
