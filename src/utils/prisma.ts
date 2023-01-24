@@ -1,7 +1,8 @@
 import prisma from '$lib/prisma'
-import { timePosted } from 'src/utils/date'
+import { timePosted } from 'src/utils/functions'
 import { error } from '@sveltejs/kit'
-import type { TweetType, UserProfile } from 'src/types'
+import type { GithubUserProfile, TweetType, UserProfile } from 'src/types'
+import { User } from '@prisma/client'
 
 export async function getTweets(): Promise<TweetType[]> {
   const tweets = await prisma.tweet.findMany({
@@ -50,7 +51,7 @@ export async function getTweet(params: Record<string, string>): Promise<TweetTyp
 
 export async function getLikedTweets() {
   const liked = await prisma.liked.findMany({
-    // TODO: 
+    // TODO:
     // todo
     where: { userId: 1 },
     select: { tweetId: true }
@@ -64,7 +65,7 @@ export async function getLikedTweets() {
 export async function createTweet(request: Request) {
   const form = await request.formData()
   const tweet = String(form.get('tweet'))
-  console.log('createTweet', form)
+  const userId = Number(form.get('userId'))
 
   if (!tweet)
     throw error(400, {
@@ -83,8 +84,7 @@ export async function createTweet(request: Request) {
       url: Math.random().toString(16).slice(2),
       content: tweet,
       likes: 0,
-      //todo
-      user: { connect: { id: 1 } }
+      user: { connect: { id: userId || 1 } }
     }
   })
 }
@@ -98,25 +98,26 @@ export async function removeTweet(request: Request) {
 export async function likeTweet(request: Request) {
   const form = await request.formData()
   console.log('likeTweet', form)
-  const id = +(form.get('id') || 1)
+  const tweetId = +(form.get('tweetId') || 1)
+  const userId = +(form.get('userId') || 1)
 
   // verify if tweet is already liked
   const liked = await prisma.liked.count({
-    where: { tweetId: id }
+    where: { tweetId }
   })
 
   if (liked === 1) {
     // if tweet is already liked unlike it
-    await prisma.liked.delete({ where: { tweetId: id } })
+    await prisma.liked.delete({ where: { tweetId } })
 
     // update the likes count
     const count = (await prisma.tweet.findUnique({
-      where: { id },
+      where: { id: tweetId },
       select: { likes: true }
     })) || { likes: 0 }
 
     await prisma.tweet.update({
-      where: { id },
+      where: { id: tweetId },
       data: { likes: (count.likes -= 1) }
     })
   }
@@ -124,41 +125,54 @@ export async function likeTweet(request: Request) {
   // add liked record
   await prisma.liked.create({
     data: {
-      tweetId: id,
-      //todo
-      user: { connect: { id: 1 } }
+      tweetId,
+      user: { connect: { id: userId } }
     }
   })
 
   // get the current like count and update it
   const count = (await prisma.tweet.findUnique({
-    where: { id },
+    where: { id: tweetId },
     select: { likes: true }
   })) || { likes: 0 }
 
   await prisma.tweet.update({
-    where: { id },
+    where: { id: tweetId },
     data: { likes: (count.likes += 1) }
   })
 }
 
-export async function getUserProfile(params: Record<string, string>): Promise<UserProfile | { status: 404 }> {
-  const profile = await prisma.user.findFirst({
-    where: { name: params.user }
+export async function getUserProfile(
+  params: GithubUserProfile | null
+): Promise<UserProfile | null> {
+  if (!params?.name || !params?.email) return null
+
+  let profile = await prisma.user.findFirst({
+    where: { name: params.name }
   })
 
+  if (!profile) {
+    profile = await prisma.user.create({
+      data: {
+        name: params.name,
+        handle: '@' + params.name,
+        email: params.email,
+        avatar: params?.image || '/profile/avatar.svg',
+        about: '',
+        tweets: {
+          create: []
+        }
+      }
+    })
+  }
+
   const tweets = await prisma.tweet.findMany({
-    //todo
-    where: { user: { id: 1 } },
+    where: { user: { id: profile.id } },
     include: { user: true },
     orderBy: { posted: 'desc' }
   })
 
   const likedTweets = await getLikedTweets()
-
-  if (!profile || !tweets || tweets.length === 0) {
-    return { status: 404 }
-  }
 
   const userTweets: TweetType[] = tweets.map((tweet) => {
     return {
@@ -174,5 +188,12 @@ export async function getUserProfile(params: Record<string, string>): Promise<Us
     }
   })
 
-  return { profile, tweets: userTweets }
+  return { ...profile, tweets: userTweets }
+}
+
+export async function editUserProfile(id: number, data: Partial<User>): Promise<User> {
+  return await prisma.user.update({
+    where: { id },
+    data: data
+  })
 }

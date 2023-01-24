@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/svelte-query'
-// import { page } from '$app/stores'
-// import { invalidate } from '$app/navigation'
+import { page } from '$app/stores'
+import { get } from 'svelte/store'
 
 type Parameters = {
   result?: ({ form }: { form: HTMLFormElement }) => void
@@ -18,12 +18,17 @@ export const enhance: Enhance = (form, { result } = {}) => {
     // })
 
     const client = useQueryClient()
+    const userId = get(page).data?.profile.id || 1
     event.preventDefault()
+    const formData = new FormData(form)
+    formData.set('userId', userId.toString())
+
+    console.debug(...formData)
 
     const response = await fetch(form.action, {
       method: form.method,
       headers: { accept: 'application/json' },
-      body: new FormData(form)
+      body: formData
     })
 
     if (!response.ok) {

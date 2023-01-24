@@ -48,7 +48,7 @@
 
       <div class="actions">
         <form action="/api/like" method="POST" use:enhance>
-          <input type="hidden" name="id" value={tweet.id} />
+          <input type="hidden" name="tweetId" value={tweet.id} />
           <button class="btn like" title="Like" type="submit">
             <div class="circle">
               <Icon width="24" height="24" name="like" class={tweet.liked ? 'liked' : ''} />

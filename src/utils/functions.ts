@@ -1,3 +1,5 @@
+export const generateUUID = (): string => Math.random().toString(16).slice(2)
+
 export function timePosted(createdAt: Date | string): string {
   try {
     const posted = new Date(createdAt).getTime()
@@ -21,4 +23,18 @@ export function timePosted(createdAt: Date | string): string {
   } catch (error) {
     throw new Error(`Something went wrong: ${error}`)
   }
+}
+
+// gets random time starting from now and
+// going back one day whenever you seed the
+// database in the future
+export function randomDate(): string {
+  // this is set to one day
+  const offset = 24 * 60 * 60 * 1000
+
+  const current = new Date().getTime()
+  const random = Math.random() * offset
+  const difference = new Date(current - random)
+
+  return difference.toISOString()
 }

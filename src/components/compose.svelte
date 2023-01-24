@@ -1,5 +1,8 @@
 <script lang="ts">
   import { enhance } from 'src/lib/form'
+  import {page} from "$app/stores";
+
+  $: profile = $page.data.profile
 
   let tweet = ''
   let maxCharacters = 140
@@ -8,8 +11,7 @@
 </script>
 
 <div class="compose">
-  <!--	TODO: user-->
-  <img src="/profile/matia/avatar.webp" alt="Avatar" />
+  <img src={profile.avatar} alt="Avatar" />
   <form
     action="/api/tweets"
     method="POST"
