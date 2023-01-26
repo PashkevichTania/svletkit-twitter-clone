@@ -59,13 +59,10 @@ export async function getTweet(
 }
 
 export async function getLikedTweets(userId = 1) {
-  console.debug('getLikedTweets', userId)
   const liked = await prisma.liked.findMany({
     where: { userId: userId },
     select: { tweetId: true }
   })
-  console.debug(liked)
-  console.debug(Object.keys(liked).map((key) => liked[key].tweetId))
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -107,7 +104,6 @@ export async function removeTweet(request: Request) {
 
 export async function likeTweet(request: Request) {
   const form = await request.formData()
-  console.log('likeTweet', form)
   const tweetId = +(form.get('tweetId') || 1)
   const userId = +(form.get('userId') || 1)
 
@@ -115,8 +111,6 @@ export async function likeTweet(request: Request) {
   const liked = await prisma.liked.count({
     where: { tweetId }
   })
-
-  console.debug(liked)
 
   if (liked === 1) {
     // if tweet is already liked unlike it
@@ -132,6 +126,8 @@ export async function likeTweet(request: Request) {
       where: { id: tweetId },
       data: { likes: (count.likes -= 1) }
     })
+
+    return
   }
 
   // add liked record
