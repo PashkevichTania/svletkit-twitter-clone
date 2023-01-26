@@ -3,8 +3,8 @@ import type { RequestHandler } from '@sveltejs/kit'
 import { createTweet, getTweets, removeTweet } from 'src/utils/prisma'
 import { getErroMessage } from 'src/utils/error'
 
-export const GET: RequestHandler = async () => {
-  const tweets = await getTweets()
+export const GET: RequestHandler = async ({ request }) => {
+  const tweets = await getTweets(request)
 
   if (!tweets.length) {
     return new Response('There is no tweets', {

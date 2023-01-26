@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/svelte-query'
 import { page } from '$app/stores'
 import { get } from 'svelte/store'
 
@@ -17,7 +16,6 @@ export const enhance: Enhance = (form, { result } = {}) => {
     //   invalidatePath = path.url
     // })
 
-    const client = useQueryClient()
     const userId = get(page).data?.profile.id || 1
     event.preventDefault()
     const formData = new FormData(form)
@@ -34,8 +32,6 @@ export const enhance: Enhance = (form, { result } = {}) => {
     if (!response.ok) {
       console.error(await response.text())
     }
-
-    client.invalidateQueries(['tweets'])
 
     // const url = new URL(invalidatePath)
     // url.search = ''

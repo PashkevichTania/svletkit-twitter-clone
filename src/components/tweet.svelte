@@ -47,7 +47,9 @@
       </div>
 
       <div class="actions">
-        <form action="/api/like" method="POST" use:enhance>
+        <form action="/api/like" method="POST"  use:enhance={{ result: () => {
+            client.invalidateQueries(['tweets'])
+        }}}>
           <input type="hidden" name="tweetId" value={tweet.id} />
           <button class="btn like" title="Like" type="submit">
             <div class="circle">

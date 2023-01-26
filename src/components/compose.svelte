@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from 'src/lib/form'
   import {page} from "$app/stores";
+  import {useQueryClient} from "@tanstack/svelte-query";
 
   $: profile = $page.data.profile
 
@@ -8,6 +9,8 @@
   let maxCharacters = 140
 
   $: charactersLeft = maxCharacters - tweet.length
+
+  const client = useQueryClient()
 </script>
 
 <div class="compose">
@@ -16,7 +19,10 @@
     action="/api/tweets"
     method="POST"
     autocomplete="off"
-    use:enhance={{ result: ({ form }) => form.reset() }}
+    use:enhance={{ result: ({ form }) => {
+      client.invalidateQueries(['tweets'])
+      form.reset()
+    }}}
   >
     <input
       aria-label="Enter your Tweet"

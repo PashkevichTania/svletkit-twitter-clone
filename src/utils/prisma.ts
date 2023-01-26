@@ -1,16 +1,19 @@
 import prisma from '$lib/prisma'
-import { timePosted } from 'src/utils/functions'
+import { parseCookie, timePosted } from 'src/utils/functions'
 import { error } from '@sveltejs/kit'
 import type { GithubUserProfile, TweetType, UserProfile } from 'src/types'
 import { User } from '@prisma/client'
 
-export async function getTweets(): Promise<TweetType[]> {
+export async function getTweets(request: Request): Promise<TweetType[]> {
+  const cookie = request.headers.get('cookie')
+  const userId = (cookie && +parseCookie(cookie)?.userId) || 1
+
   const tweets = await prisma.tweet.findMany({
     include: { user: true },
     orderBy: { posted: 'desc' }
   })
 
-  const likedTweets = await getLikedTweets()
+  const likedTweets = await getLikedTweets(userId)
 
   return tweets.map((tweet) => {
     return {
@@ -27,13 +30,19 @@ export async function getTweets(): Promise<TweetType[]> {
   })
 }
 
-export async function getTweet(params: Record<string, string>): Promise<TweetType | null> {
+export async function getTweet(
+  request: Request,
+  params: Record<string, string>
+): Promise<TweetType | null> {
+  const cookie = request.headers.get('cookie')
+  const userId = (cookie && +parseCookie(cookie)?.userId) || 1
+
   const tweet = await prisma.tweet.findFirst({
     where: { url: params.tweetId },
     include: { user: true }
   })
 
-  const likedTweets = await getLikedTweets()
+  const likedTweets = await getLikedTweets(userId)
 
   if (!tweet) return null
   return {
@@ -49,13 +58,14 @@ export async function getTweet(params: Record<string, string>): Promise<TweetTyp
   }
 }
 
-export async function getLikedTweets() {
+export async function getLikedTweets(userId = 1) {
+  console.debug('getLikedTweets', userId)
   const liked = await prisma.liked.findMany({
-    // TODO:
-    // todo
-    where: { userId: 1 },
+    where: { userId: userId },
     select: { tweetId: true }
   })
+  console.debug(liked)
+  console.debug(Object.keys(liked).map((key) => liked[key].tweetId))
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -105,6 +115,8 @@ export async function likeTweet(request: Request) {
   const liked = await prisma.liked.count({
     where: { tweetId }
   })
+
+  console.debug(liked)
 
   if (liked === 1) {
     // if tweet is already liked unlike it
@@ -172,7 +184,7 @@ export async function getUserProfile(
     orderBy: { posted: 'desc' }
   })
 
-  const likedTweets = await getLikedTweets()
+  const likedTweets = await getLikedTweets(profile.id)
 
   const userTweets: TweetType[] = tweets.map((tweet) => {
     return {
