@@ -17,8 +17,19 @@
     <input
             aria-label="Enter new name"
             name="name"
-            placeholder="What's your hot take?"
+            placeholder="Name"
             type="text"
+    />
+    <input
+            aria-label="Enter new handle"
+            name="handle"
+            placeholder="handle"
+            type="text"
+    />
+    <input
+            aria-label="Upload new avatar"
+            name="avatar"
+            type="file"
     />
     <button
             class="btn"

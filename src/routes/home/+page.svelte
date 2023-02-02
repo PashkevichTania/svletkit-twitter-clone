@@ -2,11 +2,12 @@
   import { createQuery } from '@tanstack/svelte-query'
   import Compose from 'src/components/compose.svelte'
   import Tweet from 'src/components/tweet.svelte'
+  import {CONST} from "src/constants";
   import type { TweetType } from 'src/types'
   import { fetchTweets } from 'src/lib/data'
 
   const tweets = createQuery<TweetType[], Error>({
-    queryKey: ['tweets'],
+    queryKey: [CONST.QUERY_KEYS.tweets],
     queryFn: () => fetchTweets()
   })
 </script>

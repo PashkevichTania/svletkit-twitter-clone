@@ -12,9 +12,7 @@ export type TweetType = {
   liked: boolean
 }
 
-export type UserProfile = User & {
-  tweets: TweetType[]
-}
+export type UserProfile = User
 
 export type GithubUserProfile = {
   name?: string

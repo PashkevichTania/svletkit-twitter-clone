@@ -25,20 +25,6 @@ export function timePosted(createdAt: Date | string): string {
   }
 }
 
-// gets random time starting from now and
-// going back one day whenever you seed the
-// database in the future
-export function randomDate(): string {
-  // this is set to one day
-  const offset = 24 * 60 * 60 * 1000
-
-  const current = new Date().getTime()
-  const random = Math.random() * offset
-  const difference = new Date(current - random)
-
-  return difference.toISOString()
-}
-
 export const parseCookie = (str: string) =>
   str
     .split(';')

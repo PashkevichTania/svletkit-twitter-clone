@@ -45,3 +45,4 @@ https://youtube.com/playlist?list=PLA9WiRZ-IS_zXZZyW4qfj0akvOAtk6MFS
 2. npx prisma generate (generates assets like Prisma Client)
 3. npx prisma db push (pushes the state of your Prisma schema file to the database without using migrations. It creates the database if the database does not exist.)
 4. npx prisma db seed (adds data to DB)
+5. npx prisma studio (check DB in browser)

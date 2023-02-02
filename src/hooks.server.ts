@@ -1,4 +1,4 @@
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private'
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, SECRET } from '$env/static/private'
 
 import { SvelteKitAuth } from '@auth/sveltekit'
 import GitHub from '@auth/core/providers/github'
@@ -13,7 +13,7 @@ interface Params {
 }
 
 async function authorization({ event, resolve }: Params) {
-  // Protect any routes under /authenticated
+  // Protect any routes under /protected
   if (event.url.pathname.startsWith('/protected')) {
     const session = await event.locals.getSession()
     if (!session) {
@@ -32,6 +32,7 @@ async function authorization({ event, resolve }: Params) {
 // And returning a handle which gets passed to the next function
 export const handle: Handle = sequence(
   SvelteKitAuth({
+    secret: SECRET,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     providers: [GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET })]

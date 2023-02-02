@@ -1,5 +1,6 @@
 <script lang="ts">
   import { PUBLIC_BASE_URL } from '$env/static/public'
+  import {CONST} from "src/constants";
 
   import { fade, fly } from 'svelte/transition'
 
@@ -18,7 +19,10 @@
         method: 'DELETE'
       }),
     {
-      onSuccess: () => client.invalidateQueries(['tweets'])
+      onSuccess: () => {
+        client.invalidateQueries([CONST.QUERY_KEYS.tweets])
+        client.invalidateQueries([CONST.QUERY_KEYS.userTweets])
+      }
     }
   )
 
@@ -48,7 +52,7 @@
 
       <div class="actions">
         <form action="/api/like" method="POST"  use:enhance={{ result: () => {
-            client.invalidateQueries(['tweets'])
+            client.invalidateQueries([CONST.QUERY_KEYS.tweets])
         }}}>
           <input type="hidden" name="tweetId" value={tweet.id} />
           <button class="btn like" title="Like" type="submit">

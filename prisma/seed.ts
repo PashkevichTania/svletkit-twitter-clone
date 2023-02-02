@@ -1,5 +1,19 @@
 import { PrismaClient } from '@prisma/client'
-import { generateUUID, randomDate } from '../src/utils/functions'
+
+const generateUUID = (): string => Math.random().toString(16).slice(2)
+// gets random time starting from now and
+// going back one day whenever you seed the
+// database in the future
+function randomDate(): string {
+  // this is set to one day
+  const offset = 24 * 60 * 60 * 1000
+
+  const current = new Date().getTime()
+  const random = Math.random() * offset
+  const difference = new Date(current - random)
+
+  return difference.toISOString()
+}
 
 const prisma = new PrismaClient()
 

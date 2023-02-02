@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types'
-import { getUserProfile } from 'src/utils/prisma'
+import { getUserProfileInitial } from 'src/utils/prisma'
 import type { GithubUserProfile } from 'src/types'
 
 export const load: LayoutServerLoad = async (event) => {
@@ -8,7 +8,7 @@ export const load: LayoutServerLoad = async (event) => {
     ? (session.user as GithubUserProfile)
     : null
 
-  const profile = await getUserProfile(githubProfile)
+  const profile = await getUserProfileInitial(githubProfile)
   return {
     session,
     profile

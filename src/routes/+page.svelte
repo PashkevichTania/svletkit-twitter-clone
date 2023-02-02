@@ -6,7 +6,7 @@
 
   import { page } from "$app/stores"
 
-  $: user = $page.data.session?.user
+  $: sessionUser = $page.data.session?.user
 </script>
 
 <svelte:head>
@@ -24,11 +24,11 @@
   </section>
 
   <section class="login">
-    {#if user}
+    {#if sessionUser}
       <div class="user">
         <div class="user-data">
-          <img class="hero" src={user.image} alt="user avatar">
-          <h2>{user.name}</h2>
+          <img class="hero" src={sessionUser.image} alt="user avatar">
+          <h2>{sessionUser.name}</h2>
         </div>
         <button class="btn" on:click={() => signOut()}>Sign out</button>
       </div>

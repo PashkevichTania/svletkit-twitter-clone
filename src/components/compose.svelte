@@ -1,9 +1,11 @@
 <script lang="ts">
+  import {CONST} from "src/constants.js";
   import { enhance } from 'src/lib/form'
   import {page} from "$app/stores";
   import {useQueryClient} from "@tanstack/svelte-query";
+  import {userStore} from "src/utils/store";
 
-  $: profile = $page.data.profile
+  $: profile = $userStore || $page.data.profile
 
   let tweet = ''
   let maxCharacters = 140
@@ -20,7 +22,8 @@
     method="POST"
     autocomplete="off"
     use:enhance={{ result: ({ form }) => {
-      client.invalidateQueries(['tweets'])
+      client.invalidateQueries([CONST.QUERY_KEYS.tweets])
+      client.invalidateQueries([CONST.QUERY_KEYS.userTweets])
       form.reset()
     }}}
   >

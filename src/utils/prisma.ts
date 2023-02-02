@@ -150,9 +150,9 @@ export async function likeTweet(request: Request) {
   })
 }
 
-export async function getUserProfile(
+export const getUserProfileInitial = async (
   params: GithubUserProfile | null
-): Promise<UserProfile | null> {
+): Promise<UserProfile | null> => {
   if (!params?.name || !params?.email) return null
 
   let profile = await prisma.user.findFirst({
@@ -175,13 +175,35 @@ export async function getUserProfile(
     })
   }
 
+  return { ...profile }
+}
+
+export async function getUserProfile(request: Request): Promise<UserProfile | null> {
+  const params = new URL(request.url).searchParams
+  const email = params.get('email')
+  console.debug(params)
+  if (!email) return null
+
+  const profile = await prisma.user.findFirst({
+    where: { email: email }
+  })
+
+  if (!profile) return null
+
+  return { ...profile }
+}
+
+export const getUserTweets = async (request: Request) => {
+  const cookie = request.headers.get('cookie')
+  const userId = (cookie && +parseCookie(cookie)?.userId) || 1
+
   const tweets = await prisma.tweet.findMany({
-    where: { user: { id: profile.id } },
+    where: { user: { id: userId } },
     include: { user: true },
     orderBy: { posted: 'desc' }
   })
 
-  const likedTweets = await getLikedTweets(profile.id)
+  const likedTweets = await getLikedTweets(userId)
 
   const userTweets: TweetType[] = tweets.map((tweet) => {
     return {
@@ -197,12 +219,17 @@ export async function getUserProfile(
     }
   })
 
-  return { ...profile, tweets: userTweets }
+  return { tweets: userTweets }
 }
 
-export async function editUserProfile(id: number, data: Partial<User>): Promise<User> {
+export async function editUserProfile(request: Request): Promise<User> {
+  const cookie = request.headers.get('cookie')
+  const userId = (cookie && +parseCookie(cookie)?.userId) || 1
+  const form = await request.formData()
+  const data = form.entries()
+
   return await prisma.user.update({
-    where: { id },
+    where: { id: userId },
     data: data
   })
 }
