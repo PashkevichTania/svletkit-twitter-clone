@@ -10,9 +10,16 @@ function getUsers() {
       handle: '@joyofcodedev',
       email: 'matia@example.test',
       avatar: '/profile/matia/avatar.webp',
+      banner: '/profile/matia/banner.webp',
       about: 'Likes long walks on the beach.',
       tweets: {
         create: [
+          {
+            url: generateUUID(),
+            posted: randomDate(),
+            content: `SLAY 💅🌈`,
+            likes: 20
+          },
           {
             url: generateUUID(),
             posted: randomDate(),
@@ -45,6 +52,7 @@ function getUsers() {
       handle: '@bobross',
       email: 'bob@example.test',
       avatar: '/profile/bob/avatar.webp',
+      banner: '/profile/bob/banner.webp',
       about: 'Likes painting.',
       tweets: {
         create: [

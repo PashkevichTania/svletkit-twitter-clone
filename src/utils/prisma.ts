@@ -166,6 +166,7 @@ export async function getUserProfile(
         handle: '@' + params.name,
         email: params.email,
         avatar: params?.image || '/profile/avatar.svg',
+        banner: '',
         about: '',
         tweets: {
           create: []

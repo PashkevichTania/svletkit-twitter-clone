@@ -41,5 +41,7 @@ created by tutotial: https://joyofcode.xyz/sveltekit-for-beginners
 
 https://youtube.com/playlist?list=PLA9WiRZ-IS_zXZZyW4qfj0akvOAtk6MFS
 
-1. npx prisma db push
-2. npx prisma db seed
+1. npx prisma init (create prisma folder) 
+2. npx prisma generate (generates assets like Prisma Client)
+3. npx prisma db push (pushes the state of your Prisma schema file to the database without using migrations. It creates the database if the database does not exist.)
+4. npx prisma db seed (adds data to DB)

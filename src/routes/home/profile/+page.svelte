@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores"
     import Tweet from 'src/components/tweet.svelte'
+    import Icon from 'src/components/icon.svelte'
 
     $: session = $page.data.session
     $: profile = $page.data.profile
@@ -11,8 +12,12 @@
 </svelte:head>
 
 <div class="profile">
-<!--    <img class="banner" src="{profile.banner}" alt="Profile banner" />-->
+    <img class="banner" src={profile.banner || '/profile/banner_bg.jpeg'} alt="Profile banner" />
     <img class="avatar" src={profile.avatar} alt={profile.name} />
+    <a href="/home/profile/edit" sveltekit:prefetch>
+        <Icon width="32" height="32" name="edit" />
+        <span>Edit</span>
+    </a>
 </div>
 
 <div class="content">
@@ -21,7 +26,7 @@
         <span class="handle">{profile.handle}</span>
     </div>
     <div class="about">
-        <span>{profile.about}</span>
+        <span>About: {profile.about}</span>
     </div>
 </div>
 

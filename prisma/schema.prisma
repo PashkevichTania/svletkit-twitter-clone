@@ -23,6 +23,7 @@ model User {
   handle String  @unique
   name   String
   avatar String
+  banner String
   about  String
   tweets Tweet[]
   liked  Liked[]
