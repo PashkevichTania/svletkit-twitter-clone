@@ -1,12 +1,13 @@
-import type { PageLoad } from '.svelte-kit/types/src/routes/home/$types'
-import { fetchUserTweets } from '$lib/data'
 import { CONST } from 'src/constants'
+import type { PageLoad } from './$types'
+import { fetchUser } from 'src/lib/data'
 
 export const load: PageLoad = async ({ parent }) => {
-  const { queryClient } = await parent()
+  const { profile, queryClient } = await parent()
 
-  await queryClient.prefetchQuery({
-    queryKey: [CONST.QUERY_KEYS.userTweets],
-    queryFn: () => fetchUserTweets()
-  })
+  if (profile?.email)
+    await queryClient.prefetchQuery({
+      queryKey: [CONST.QUERY_KEYS.user],
+      queryFn: () => fetchUser(profile.email)
+    })
 }

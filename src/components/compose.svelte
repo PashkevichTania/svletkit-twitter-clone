@@ -1,8 +1,10 @@
 <script lang="ts">
+  import {fetchUser} from "$lib/data";
   import {CONST} from "src/constants.js";
   import { enhance } from 'src/lib/form'
   import {page} from "$app/stores";
-  import {useQueryClient} from "@tanstack/svelte-query";
+  import {createQuery, useQueryClient} from "@tanstack/svelte-query";
+  import type {FullUserProfile} from "src/types";
 
   $: profile = $page.data.profile
 
@@ -12,17 +14,20 @@
   $: charactersLeft = maxCharacters - tweet.length
 
   const client = useQueryClient()
+  const user = createQuery<FullUserProfile, Error>({
+    queryKey: [CONST.QUERY_KEYS.user],
+    queryFn: () => fetchUser(profile.email)
+  })
 </script>
 
 <div class="compose">
-  <img src={profile.avatar} alt="Avatar" />
+  <img src={$user.data?.avatar || profile.avatar} alt="Avatar" />
   <form
     action="/api/tweets"
     method="POST"
     autocomplete="off"
     use:enhance={{ result: ({ form }) => {
       client.invalidateQueries([CONST.QUERY_KEYS.tweets])
-      client.invalidateQueries([CONST.QUERY_KEYS.userTweets])
       form.reset()
     }}}
   >

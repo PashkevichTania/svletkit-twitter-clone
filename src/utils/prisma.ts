@@ -1,8 +1,8 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 import prisma from '$lib/prisma'
-import { parseCookie, timePosted } from 'src/utils/functions'
+import { omit, parseCookie, timePosted } from 'src/utils/functions'
 import { error } from '@sveltejs/kit'
-import type { GithubUserProfile, TweetType, UserProfile } from 'src/types'
+import type { FullUserProfile, GithubUserProfile, TweetType, UserProfile } from 'src/types'
 
 export async function getTweets(request: Request): Promise<TweetType[]> {
   const cookie = request.headers.get('cookie')
@@ -10,24 +10,21 @@ export async function getTweets(request: Request): Promise<TweetType[]> {
 
   if (!userId) return []
 
-  const tweets = await prisma.tweet.findMany({
-    include: { user: true },
-    orderBy: { posted: 'desc' }
+  const tweets = await prisma.post.findMany({
+    include: { author: true, comments: true, likedBy: true },
+    orderBy: { createdAt: 'desc' }
   })
-
-  const likedTweets = await getLikedTweets(userId)
 
   return tweets.map((tweet) => {
     return {
       id: tweet.id,
-      content: tweet.content,
-      likes: tweet.likes,
-      posted: timePosted(tweet.posted),
       url: tweet.url,
-      avatar: tweet.user.avatar,
-      handle: tweet.user.handle,
-      name: tweet.user.name,
-      liked: likedTweets.includes(tweet.id)
+      content: tweet.content,
+      createdAt: timePosted(tweet.createdAt),
+      author: tweet.author,
+      comments: tweet.comments,
+      likes: tweet.likedBy.length,
+      liked: tweet.likedBy.some((user) => user.id === userId)
     }
   })
 }
@@ -39,43 +36,34 @@ export async function getTweet(
   const cookie = request.headers.get('cookie')
   const userId = cookie && +parseCookie(cookie)?.userId
 
-  const tweet = await prisma.tweet.findFirst({
+  const tweet = await prisma.post.findFirst({
     where: { url: params.tweetUrl },
-    include: { user: true }
+    include: { author: true, comments: true, likedBy: true }
   })
 
   if (!tweet || !userId) return null
 
-  const likedTweets = await getLikedTweets(userId)
-
   return {
     id: tweet.id,
-    content: tweet.content,
-    likes: tweet.likes,
-    posted: timePosted(tweet.posted),
     url: tweet.url,
-    avatar: tweet.user.avatar,
-    handle: tweet.user.handle,
-    name: tweet.user.name,
-    liked: likedTweets.includes(tweet.id)
+    content: tweet.content,
+    createdAt: timePosted(tweet.createdAt),
+    author: tweet.author,
+    comments: tweet.comments,
+    likes: tweet.likedBy.length,
+    liked: tweet.likedBy.some((user) => user.id === userId)
   }
-}
-
-export async function getLikedTweets(userId = 1) {
-  const liked = await prisma.liked.findMany({
-    where: { userId: userId },
-    select: { tweetId: true }
-  })
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return Object.keys(liked).map((key) => liked[key].tweetId)
 }
 
 export async function createTweet(request: Request) {
   const form = await request.formData()
   const tweet = String(form.get('tweet'))
   const userId = Number(form.get('userId'))
+
+  if (!userId)
+    throw error(400, {
+      message: 'No user ID'
+    })
 
   if (!tweet)
     throw error(400, {
@@ -87,69 +75,80 @@ export async function createTweet(request: Request) {
       message: 'Maximum Tweet length exceeded.'
     })
 
-  // you can get the user from the session
-  await prisma.tweet.create({
+  await prisma.post.create({
     data: {
-      posted: new Date(),
+      createdAt: new Date(),
       url: Math.random().toString(16).slice(2),
       content: tweet,
-      likes: 0,
-      user: { connect: { id: userId || 1 } }
+      author: { connect: { id: userId } }
     }
   })
 }
 
 export async function removeTweet(request: Request) {
   const params = new URL(request.url).searchParams
-  const tweetId = +(params.get('id') || 1)
-  await prisma.tweet.delete({ where: { id: tweetId } })
+  const tweetId = Number(params.get('id'))
+  if (!tweetId)
+    throw error(400, {
+      message: `Tweet with id ${tweetId} not found`
+    })
+
+  await prisma.post.delete({ where: { id: tweetId } })
 }
 
 export async function likeTweet(request: Request) {
   const form = await request.formData()
-  const tweetId = +(form.get('tweetId') || 1)
-  const userId = +(form.get('userId') || 1)
+  const tweetId = Number(form.get('tweetId'))
+  const userId = Number(form.get('userId'))
 
-  // verify if tweet is already liked
-  const liked = await prisma.liked.count({
-    where: { tweetId }
-  })
-
-  if (liked === 1) {
-    // if tweet is already liked unlike it
-    await prisma.liked.delete({ where: { tweetId } })
-
-    // update the likes count
-    const count = (await prisma.tweet.findUnique({
-      where: { id: tweetId },
-      select: { likes: true }
-    })) || { likes: 0 }
-
-    await prisma.tweet.update({
-      where: { id: tweetId },
-      data: { likes: (count.likes -= 1) }
+  if (!tweetId || !userId)
+    throw error(400, {
+      message: !userId ? 'No userId' : 'No tweetId'
     })
 
-    return
-  }
-
-  // add liked record
-  await prisma.liked.create({
-    data: {
-      tweetId,
-      user: { connect: { id: userId } }
-    }
+  const tweet = await prisma.post.findUnique({
+    where: { id: tweetId },
+    include: { likedBy: true }
   })
 
-  // get the current like count and update it
-  const count = (await prisma.tweet.findUnique({
-    where: { id: tweetId },
-    select: { likes: true }
-  })) || { likes: 0 }
+  const user = await prisma.user.findUnique({
+    where: { id: userId }
+  })
 
-  await prisma.tweet.update({
+  if (!tweet || !user)
+    throw error(400, {
+      message: `Tweet with id ${tweetId} not found`
+    })
+
+  // verify if tweet is already liked
+  const liked = tweet.likedBy.some((user) => user.id === userId)
+  const likedCopy = tweet.likedBy
+
+  if (liked) {
+    // if tweet is already liked unlike it
+    return await prisma.post.update({
+      where: { id: tweetId },
+      data: {
+        likedBy: {
+          disconnect: {
+            id: userId
+          }
+        }
+      }
+    })
+  }
+
+  likedCopy.push(user)
+
+  return await prisma.post.update({
     where: { id: tweetId },
-    data: { likes: (count.likes += 1) }
+    data: {
+      likedBy: {
+        connect: {
+          id: userId
+        }
+      }
+    }
   })
 }
 
@@ -158,8 +157,8 @@ export const getUserProfileInitial = async (
 ): Promise<UserProfile | null> => {
   if (!params?.name || !params?.email) return null
 
-  let profile = await prisma.user.findFirst({
-    where: { name: params.name }
+  let profile = await prisma.user.findUnique({
+    where: { email: params.email }
   })
 
   if (!profile) {
@@ -170,10 +169,7 @@ export const getUserProfileInitial = async (
         email: params.email,
         avatar: params?.image || '/profile/avatar.svg',
         banner: '',
-        about: '',
-        tweets: {
-          create: []
-        }
+        about: ''
       }
     })
   }
@@ -181,49 +177,40 @@ export const getUserProfileInitial = async (
   return { ...profile }
 }
 
-export async function getUserProfile(request: Request): Promise<UserProfile | null> {
+export async function getUserProfile(request: Request): Promise<FullUserProfile | null> {
   const params = new URL(request.url).searchParams
   const email = params.get('email')
   if (!email) return null
 
-  const profile = await prisma.user.findFirst({
-    where: { email: email }
+  const profile = await prisma.user.findUnique({
+    where: { email: email },
+    include: {
+      posts: {
+        include: {
+          author: true,
+          likedBy: true,
+          comments: true
+        }
+      }
+    }
   })
 
   if (!profile) return null
 
-  return { ...profile }
-}
+  const tweets = profile.posts.map((tweet) => ({
+    id: tweet.id,
+    url: tweet.url,
+    content: tweet.content,
+    createdAt: timePosted(tweet.createdAt),
+    author: tweet.author,
+    comments: tweet.comments,
+    likes: tweet.likedBy.length,
+    liked: tweet.likedBy.some((user) => user.id === profile.id)
+  }))
 
-export const getUserTweets = async (request: Request): Promise<{ tweets: TweetType[] }> => {
-  const cookie = request.headers.get('cookie')
-  const userId = cookie && +parseCookie(cookie)?.userId
+  const user = omit(profile, 'posts') as UserProfile
 
-  if (!userId) return { tweets: [] }
-
-  const tweets = await prisma.tweet.findMany({
-    where: { user: { id: userId } },
-    include: { user: true },
-    orderBy: { posted: 'desc' }
-  })
-
-  const likedTweets = await getLikedTweets(userId)
-
-  const userTweets: TweetType[] = tweets.map((tweet) => {
-    return {
-      id: tweet.id,
-      content: tweet.content,
-      likes: tweet.likes,
-      posted: timePosted(tweet.posted),
-      url: tweet.url,
-      avatar: tweet.user.avatar,
-      handle: tweet.user.handle,
-      name: tweet.user.name,
-      liked: likedTweets.includes(tweet.id)
-    }
-  })
-
-  return { tweets: userTweets }
+  return { ...user, tweets }
 }
 
 export async function editUserProfile(request: Request): Promise<User> {

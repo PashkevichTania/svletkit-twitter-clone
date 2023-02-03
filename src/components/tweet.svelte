@@ -21,7 +21,7 @@
     {
       onSuccess: () => {
         client.invalidateQueries([CONST.QUERY_KEYS.tweets])
-        client.invalidateQueries([CONST.QUERY_KEYS.userTweets])
+        client.invalidateQueries([CONST.QUERY_KEYS.user])
       }
     }
   )
@@ -32,17 +32,17 @@
 </script>
 
 <article class="tweet-container" transition:fade>
-  <a class="avatar" href="/home/profile/{tweet.name}">
-    <img width="140" height="140" src={tweet.avatar} alt={tweet.name} />
+  <a class="avatar" href="/home/profile/{tweet.author.name}">
+    <img width="140" height="140" src={tweet.author.avatar} alt={tweet.author.name} />
   </a>
 
   <div class="tweet-details">
     <div>
-      <a href="/home/profile/{tweet.name}" class="user">
-        {tweet.name}
+      <a href="/home/profile/{tweet.author.name}" class="user">
+        {tweet.author.name}
       </a>
-      <span class="handle">{tweet.handle}</span>
-      <span class="posted"> · {tweet.posted}</span>
+      <span class="handle">{tweet.author.handle}</span>
+      <span class="posted"> · {tweet.createdAt}</span>
     </div>
 
     <div class="tweet">
@@ -53,6 +53,7 @@
       <div class="actions">
         <form action="/api/like" method="POST"  use:enhance={{ result: () => {
             client.invalidateQueries([CONST.QUERY_KEYS.tweets])
+            client.invalidateQueries([CONST.QUERY_KEYS.user])
         }}}>
           <input type="hidden" name="tweetId" value={tweet.id} />
           <button class="btn like" title="Like" type="submit">

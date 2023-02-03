@@ -33,3 +33,11 @@ export const parseCookie = (str: string) =>
       acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim())
       return acc
     }, {})
+
+export function omit<T>(obj: T, ...props: (keyof T)[]): Omit<T, keyof T> {
+  const result = { ...obj }
+  props.forEach(function (prop) {
+    delete result[prop]
+  })
+  return result
+}

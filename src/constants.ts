@@ -3,7 +3,6 @@ export const CONST = {
   icon: '🦊',
   QUERY_KEYS: {
     tweets: 'tweets',
-    userTweets: 'userTweets',
     user: 'user'
   }
 }

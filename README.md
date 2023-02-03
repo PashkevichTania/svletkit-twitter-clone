@@ -41,6 +41,14 @@ created by tutotial: https://joyofcode.xyz/sveltekit-for-beginners
 
 https://youtube.com/playlist?list=PLA9WiRZ-IS_zXZZyW4qfj0akvOAtk6MFS
 
+[TanStack Query Svelte](https://tanstack.com/query/v4/docs/svelte/overview)
+Import from:
+'@sveltestack/svelte-query' -> '@tanstack/svelte-query'
+Renamed functions:
+useQuery -> createQuery
+useQueries -> createQueries
+useMutation -> createMutation
+
 1. npx prisma init (create prisma folder) 
 2. npx prisma generate (generates assets like Prisma Client)
 3. npx prisma db push (pushes the state of your Prisma schema file to the database without using migrations. It creates the database if the database does not exist.)

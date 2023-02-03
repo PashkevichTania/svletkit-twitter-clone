@@ -1,4 +1,7 @@
 <script lang="ts">
+  import {fetchUser} from "$lib/data";
+  import {createQuery} from "@tanstack/svelte-query";
+  import type {FullUserProfile} from "src/types";
   import { fly } from 'svelte/transition'
   import { CONST } from 'src/constants'
 
@@ -7,6 +10,10 @@
   import { page } from "$app/stores"
 
   $: sessionUser = $page.data.session?.user
+  const user = createQuery<FullUserProfile, Error>({
+    queryKey: [CONST.QUERY_KEYS.user],
+    queryFn: () => fetchUser(sessionUser?.email || '')
+  })
 </script>
 
 <svelte:head>
@@ -27,8 +34,8 @@
     {#if sessionUser}
       <div class="user">
         <div class="user-data">
-          <img class="hero" src={sessionUser.image} alt="user avatar">
-          <h2>{sessionUser.name}</h2>
+          <img class="hero" src={$user.data?.avatar || sessionUser.image} alt="user avatar">
+          <h2>{$user.data?.name ||sessionUser.name}</h2>
         </div>
         <button class="btn" on:click={() => signOut()}>Sign out</button>
       </div>

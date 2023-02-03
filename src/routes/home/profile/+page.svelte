@@ -1,59 +1,60 @@
 <script lang="ts">
     import {page} from "$app/stores"
-    import { fetchUserTweets } from "$lib/data";
+    import {fetchUser} from "$lib/data";
     import {createQuery} from "@tanstack/svelte-query";
     import Icon from 'src/components/icon.svelte'
     import Tweet from 'src/components/tweet.svelte'
     import {CONST} from "src/constants";
-    import type { TweetType } from "src/types";
+    import type {FullUserProfile} from "src/types";
 
-    $: session = $page.data.session
     $: profile = $page.data.profile
 
-    const tweets = createQuery<TweetType[], Error>({
-        queryKey: [CONST.QUERY_KEYS.userTweets],
-        queryFn: () => fetchUserTweets()
+    const user = createQuery<FullUserProfile, Error>({
+        queryKey: [CONST.QUERY_KEYS.user],
+        queryFn: () => fetchUser(profile.email)
     })
 </script>
 
 <svelte:head>
-    <title>{profile.name} ({profile.handle})</title>
+    <title>{$user.data.name} ({$user.data.handle})</title>
 </svelte:head>
 
-<div class="profile">
-    <img class="banner" src={profile.banner || '/profile/banner_bg.jpeg'} alt="Profile banner"/>
-    <img class="avatar" src={profile.avatar} alt={profile.name}/>
-    <div class="edit">
-        <a class="edit_btn" href="/home/profile/edit" sveltekit:prefetch>
-            <Icon width="32" height="32" name="edit"/>
-            <span>Edit</span>
-        </a>
+{#if $user.status === 'loading'}
+    <span>Loading tweets...</span>
+{:else if $user.status === 'error'}
+    <span>Error: {$user.error.message}</span>
+{:else}
+    <div class="profile">
+        <img class="banner" src={$user.data.banner || '/profile/banner_bg.jpeg'} alt="Profile banner"/>
+        <img class="avatar" src={$user.data.avatar} alt={$user.data.name}/>
+        <div class="edit">
+            <a class="edit_btn" href="/home/profile/edit" sveltekit:prefetch>
+                <Icon width="32" height="32" name="edit"/>
+                <span>Edit</span>
+            </a>
+        </div>
     </div>
-</div>
 
-<div class="content">
-    <div class="user">
-        <span class="name">{profile.name}</span>
-        <span class="handle">{profile.handle}</span>
+    <div class="content">
+        <div class="user">
+            <span class="name">{$user.data.name}</span>
+            <span class="handle">{$user.data.handle}</span>
+        </div>
+        <div class="about">
+            <span>About: {$user.data.about}</span>
+        </div>
     </div>
-    <div class="about">
-        <span>About: {profile.about}</span>
+
+    <div class="tweets">
+        <p>Tweets: {$user.data.tweets.length || 0}</p>
+
+        {#if $user.data.tweets}
+            {#each $user.data.tweets as tweet (tweet.id)}
+                <Tweet {tweet}/>
+            {/each}
+        {/if}
     </div>
-</div>
-
-<div class="tweets">
-    <p>Tweets: {$tweets.data.length || 0}</p>
-
-    {#if $tweets.status === 'loading'}
-        <span>Loading tweets...</span>
-    {:else if $tweets.status === 'error'}
-        <span>Error: {$tweets.error.message}</span>
-    {:else}
-        {#each $tweets.data as tweet (tweet.id)}
-            <Tweet {tweet} />
-        {/each}
-    {/if}
-</div>
+{/if}
 
 <style lang="scss">
   .profile {

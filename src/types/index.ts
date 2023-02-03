@@ -1,18 +1,19 @@
-import type { User } from '@prisma/client'
+import type { User, Comment } from '@prisma/client'
+
+export type UserProfile = User
+
+export type FullUserProfile = User & { tweets: TweetType[] }
 
 export type TweetType = {
   id: number
-  content: string
-  likes: number
-  posted: string
   url: string
-  avatar: string
-  handle: string
-  name: string
+  content: string
+  createdAt: string
+  author: UserProfile
+  comments: Comment[]
+  likes: number
   liked: boolean
 }
-
-export type UserProfile = User
 
 export type GithubUserProfile = {
   name?: string
