@@ -15,7 +15,9 @@ export const fetchUserTweets = async () => {
   return tweets
 }
 
-export const fetchUser = async (email = ''): Promise<UserProfile | null> => {
+export const fetchUser = async (
+  email: string | null | undefined = ''
+): Promise<UserProfile | null> => {
   const response = await fetch(`${PUBLIC_BASE_URL}/api/user/?email=${email}`)
   const user: UserProfile = response.status === 200 ? await response.json() : null
 

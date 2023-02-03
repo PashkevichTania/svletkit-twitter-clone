@@ -3,9 +3,8 @@
   import { enhance } from 'src/lib/form'
   import {page} from "$app/stores";
   import {useQueryClient} from "@tanstack/svelte-query";
-  import {userStore} from "src/utils/store";
 
-  $: profile = $userStore || $page.data.profile
+  $: profile = $page.data.profile
 
   let tweet = ''
   let maxCharacters = 140

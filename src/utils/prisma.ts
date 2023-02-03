@@ -1,12 +1,14 @@
+import { User } from '@prisma/client'
 import prisma from '$lib/prisma'
 import { parseCookie, timePosted } from 'src/utils/functions'
 import { error } from '@sveltejs/kit'
 import type { GithubUserProfile, TweetType, UserProfile } from 'src/types'
-import { User } from '@prisma/client'
 
 export async function getTweets(request: Request): Promise<TweetType[]> {
   const cookie = request.headers.get('cookie')
-  const userId = (cookie && +parseCookie(cookie)?.userId) || 1
+  const userId = cookie && +parseCookie(cookie)?.userId
+
+  if (!userId) return []
 
   const tweets = await prisma.tweet.findMany({
     include: { user: true },
@@ -193,9 +195,11 @@ export async function getUserProfile(request: Request): Promise<UserProfile | nu
   return { ...profile }
 }
 
-export const getUserTweets = async (request: Request) => {
+export const getUserTweets = async (request: Request): Promise<{ tweets: TweetType[] }> => {
   const cookie = request.headers.get('cookie')
-  const userId = (cookie && +parseCookie(cookie)?.userId) || 1
+  const userId = cookie && +parseCookie(cookie)?.userId
+
+  if (!userId) return { tweets: [] }
 
   const tweets = await prisma.tweet.findMany({
     where: { user: { id: userId } },
@@ -226,7 +230,9 @@ export async function editUserProfile(request: Request): Promise<User> {
   const cookie = request.headers.get('cookie')
   const userId = (cookie && +parseCookie(cookie)?.userId) || 1
   const form = await request.formData()
-  const data = form.entries()
+  const data = Object.fromEntries(form.entries())
+
+  console.debug('user', data)
 
   return await prisma.user.update({
     where: { id: userId },

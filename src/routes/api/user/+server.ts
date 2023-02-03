@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit'
-import { getUserProfile } from 'src/utils/prisma'
+import { editUserProfile, getUserProfile } from 'src/utils/prisma'
 import { getErroMessage } from 'src/utils/error'
 
 export const GET: RequestHandler = async ({ request }) => {
@@ -16,12 +16,12 @@ export const GET: RequestHandler = async ({ request }) => {
 export const POST: RequestHandler = async ({ request }) => {
   let response
   try {
-    // await createTweet(request)
+    await editUserProfile(request)
     response = new Response('Success', {
       headers: {
-        'Content-Type': 'application/json'
+        Location: '/home/profile'
       },
-      status: 200
+      status: 302
     })
   } catch (e) {
     response = new Response(getErroMessage(e), {

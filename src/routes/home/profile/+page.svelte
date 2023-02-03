@@ -6,10 +6,9 @@
     import Tweet from 'src/components/tweet.svelte'
     import {CONST} from "src/constants";
     import type { TweetType } from "src/types";
-    import {userStore} from "src/utils/store";
 
     $: session = $page.data.session
-    $: profile = $userStore || $page.data.profile
+    $: profile = $page.data.profile
 
     const tweets = createQuery<TweetType[], Error>({
         queryKey: [CONST.QUERY_KEYS.userTweets],

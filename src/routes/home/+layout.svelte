@@ -1,21 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import {fetchUser} from "$lib/data";
-  import {createQuery} from "@tanstack/svelte-query";
   import Navigation from 'src/components/sidebar/navigation.svelte'
   import Trending from 'src/components/sidebar/trending.svelte'
   import Transition from 'src/components/transition.svelte'
-  import {CONST} from "src/constants";
-  import type {UserProfile} from "src/types";
-  import {userStore} from "src/utils/store";
-
-  $: email = $page.data.session?.user?.email || ''
-
-  $: user = createQuery<UserProfile | null, Error>({
-    queryKey: [CONST.QUERY_KEYS.user],
-    queryFn: async () => await fetchUser(email)
-  })
-  $: if (user) userStore.set($user.data)
 </script>
 
 <div class="container">
