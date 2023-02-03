@@ -26,37 +26,32 @@ function getUsers() {
       avatar: '/profile/matia/avatar.webp',
       banner: '/profile/matia/banner.webp',
       about: 'Likes long walks on the beach.',
-      tweets: {
+      posts: {
         create: [
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: `SLAY 💅🌈`,
-            likes: 20
+            createdAt: randomDate(),
+            content: `SLAY 💅🌈`
           },
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: `SvelteKit is lit. 🔥`,
-            likes: 10
+            createdAt: randomDate(),
+            content: `SvelteKit is lit. 🔥`
           },
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: `I love Svelte! ❤️`,
-            likes: 24
+            createdAt: randomDate(),
+            content: `I love Svelte! ❤️`
           },
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: ` Amet nisl purus in mollis nunc sed.`,
-            likes: 0
+            createdAt: randomDate(),
+            content: ` Amet nisl purus in mollis nunc sed.`
           },
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: `Enim facilisis gravida neque convallis a cras. Sed sed risus pretium quam vulputate.`,
-            likes: 0
+            createdAt: randomDate(),
+            content: `Enim facilisis gravida neque convallis a cras. Sed sed risus pretium quam vulputate.`
           }
         ]
       }
@@ -68,32 +63,28 @@ function getUsers() {
       avatar: '/profile/bob/avatar.webp',
       banner: '/profile/bob/banner.webp',
       about: 'Likes painting.',
-      tweets: {
+      posts: {
         create: [
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-            likes: 1
+            createdAt: randomDate(),
+            content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
           },
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: ` Mattis aliquam faucibus purus in massa tempor nec feugiat nisl.`,
-            likes: 4
+            createdAt: randomDate(),
+            content: ` Mattis aliquam faucibus purus in massa tempor nec feugiat nisl.`
           },
           {
             url: generateUUID(),
-            posted: randomDate(),
+            createdAt: randomDate(),
             content:
-              'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit',
-            likes: 0
+              'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
           },
           {
             url: generateUUID(),
-            posted: randomDate(),
-            content: 'Euismod elementum nisi quis eleifend quam. 🌈',
-            likes: 10
+            createdAt: randomDate(),
+            content: 'Euismod elementum nisi quis eleifend quam. 🌈'
           }
         ]
       }
@@ -107,6 +98,30 @@ async function seed() {
   for (const user of users) {
     await prisma.user.create({ data: user })
   }
+  //Like all post by first user
+  await prisma.user.update({
+    where: { id: 1 },
+    data: {
+      likedPosts: {
+        connect: [
+          { id: 1 },
+          { id: 2 },
+          { id: 3 },
+          { id: 4 },
+          { id: 5 },
+          { id: 6 },
+          { id: 7 },
+          { id: 8 },
+          { id: 9 }
+        ]
+      }
+    }
+  })
+  //Like some post by second user
+  await prisma.user.update({
+    where: { id: 2 },
+    data: { likedPosts: { connect: [{ id: 2 }, { id: 4 }, { id: 3 }, { id: 5 }, { id: 9 }] } }
+  })
 }
 
 seed()
