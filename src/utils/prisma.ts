@@ -37,16 +37,17 @@ export async function getTweet(
   params: Record<string, string>
 ): Promise<TweetType | null> {
   const cookie = request.headers.get('cookie')
-  const userId = (cookie && +parseCookie(cookie)?.userId) || 1
+  const userId = cookie && +parseCookie(cookie)?.userId
 
   const tweet = await prisma.tweet.findFirst({
-    where: { url: params.tweetId },
+    where: { url: params.tweetUrl },
     include: { user: true }
   })
 
+  if (!tweet || !userId) return null
+
   const likedTweets = await getLikedTweets(userId)
 
-  if (!tweet) return null
   return {
     id: tweet.id,
     content: tweet.content,
@@ -183,7 +184,6 @@ export const getUserProfileInitial = async (
 export async function getUserProfile(request: Request): Promise<UserProfile | null> {
   const params = new URL(request.url).searchParams
   const email = params.get('email')
-  console.debug(params)
   if (!email) return null
 
   const profile = await prisma.user.findFirst({

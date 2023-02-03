@@ -71,7 +71,7 @@
           </button>
         </form>
 
-        <a href="/home/profile/{tweet.name}/status/{tweet.url}" class="permalink" title="Permalink">
+        <a href="/home/tweets/{tweet.url}" class="permalink" title="Permalink">
           <div class="circle">
             <Icon width="24" height="24" name="permalink" />
           </div>
