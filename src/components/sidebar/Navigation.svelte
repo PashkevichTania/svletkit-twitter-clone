@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import Icon from 'src/components/icon.svelte'
+  import Icon from 'src/components/Icon.svelte'
   import { CONST } from 'src/constants.js'
 
   $: path = $page.url.pathname

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import Navigation from 'src/components/sidebar/navigation.svelte'
+  import Navigation from 'src/components/sidebar/Navigation.svelte'
 
   $: path = $page.url.pathname
 </script>

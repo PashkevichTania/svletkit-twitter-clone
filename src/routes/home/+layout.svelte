@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import Navigation from 'src/components/sidebar/navigation.svelte'
-  import Trending from 'src/components/sidebar/trending.svelte'
-  import Transition from 'src/components/transition.svelte'
+  import Navigation from 'src/components/sidebar/Navigation.svelte'
+  import Trending from 'src/components/sidebar/Trending.svelte'
+  import Transition from 'src/components/Transition.svelte'
 </script>
 
 <div class="container">

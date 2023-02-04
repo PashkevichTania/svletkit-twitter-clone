@@ -1,11 +1,12 @@
 <script lang="ts">
+  import {page} from "$app/stores";
   import { PUBLIC_BASE_URL } from '$env/static/public'
   import {CONST} from "src/constants";
 
   import { fade, fly } from 'svelte/transition'
 
   import { enhance } from 'src/lib/form'
-  import Icon from 'src/components/icon.svelte'
+  import Icon from 'src/components/Icon.svelte'
   import type { TweetType } from 'src/types'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
 
@@ -78,16 +79,18 @@
           </div>
         </a>
 
-        <button
-          aria-label="Remove tweet"
-          class="btn remove"
-          title="Remove"
-          on:click={() => deleteHandel(tweet.id)}
-        >
-          <div class="circle">
-            <Icon width="24" height="24" name="remove" />
-          </div>
-        </button>
+        {#if tweet.author.id === $page.data.profile.id}
+          <button
+                  aria-label="Remove tweet"
+                  class="btn remove"
+                  title="Remove"
+                  on:click={() => deleteHandel(tweet.id)}
+          >
+            <div class="circle">
+              <Icon width="24" height="24" name="remove" />
+            </div>
+          </button>
+        {/if}
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <script>
-    import Tweet from 'src/components/tweet.svelte'
+    import Tweet from 'src/components/Tweet.svelte'
 
     export let data;
 </script>

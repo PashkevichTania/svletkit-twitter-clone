@@ -2,8 +2,8 @@
     import {page} from "$app/stores"
     import {fetchUser} from "$lib/data";
     import {createQuery} from "@tanstack/svelte-query";
-    import Icon from 'src/components/icon.svelte'
-    import Tweet from 'src/components/tweet.svelte'
+    import Icon from 'src/components/Icon.svelte'
+    import Tweet from 'src/components/Tweet.svelte'
     import {CONST} from "src/constants";
     import type {FullUserProfile} from "src/types";
 
