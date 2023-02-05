@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit'
 
-import { createTweet, getTweets, removeTweet } from 'src/utils/prisma'
-import { getErroMessage } from 'src/utils/error'
+import { createTweet, getTweets, removeTweet } from '$lib/prismaFunctions'
+import { getErroMessage } from '$lib/error'
 
 export const GET: RequestHandler = async ({ request }) => {
   const tweets = await getTweets(request)

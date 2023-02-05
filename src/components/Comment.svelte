@@ -7,22 +7,21 @@
 
     import { enhance } from 'src/lib/form'
     import Icon from 'src/components/Icon.svelte'
-    import type { TweetType } from 'src/types'
+    import type { Comment, UserProfile } from 'src/types'
     import { createMutation, useQueryClient } from '@tanstack/svelte-query'
 
-    export let tweet: TweetType
+    export let comment: Comment
 
     const client = useQueryClient()
 
     const deleteMutation = createMutation(
         (id: number) =>
-            fetch(`${PUBLIC_BASE_URL}/api/tweets?id=${id}`, {
+            fetch(`${PUBLIC_BASE_URL}/api/comment?id=${id}`, {
                 method: 'DELETE'
             }),
         {
             onSuccess: () => {
                 client.invalidateQueries([CONST.QUERY_KEYS.tweets])
-                client.invalidateQueries([CONST.QUERY_KEYS.user])
             }
         }
     )
@@ -33,58 +32,50 @@
 </script>
 
 <article class="tweet-container" transition:fade>
-    <a class="avatar" href="/home/profile/{tweet.author.name}">
-        <img width="140" height="140" src={tweet.author.avatar} alt={tweet.author.name} />
+    <a class="avatar" href="/home/profile/{comment.author.name}">
+        <img width="140" height="140" src={comment.author.avatar} alt={comment.author.name} />
     </a>
 
     <div class="tweet-details">
         <div>
-            <a href="/home/profile/{tweet.author.name}" class="user">
-                {tweet.author.name}
+            <a href="/home/profile/{comment.author.name}" class="user">
+                {comment.author.name}
             </a>
-            <span class="handle">{tweet.author.handle}</span>
-            <span class="posted"> · {tweet.createdAt}</span>
+            <span class="handle">{comment.author.handle}</span>
+            <span class="posted"> · {comment.createdAt}</span>
         </div>
 
         <div class="tweet">
             <div class="content">
-                {tweet.content}
+                {comment.content}
             </div>
 
             <div class="actions">
                 <form action="/api/like" method="POST"  use:enhance={{ result: () => {
             client.invalidateQueries([CONST.QUERY_KEYS.tweets])
-            client.invalidateQueries([CONST.QUERY_KEYS.user])
         }}}>
-                    <input type="hidden" name="tweetId" value={tweet.id} />
+                    <input type="hidden" name="commentId" value={comment.id} />
                     <button class="btn like" title="Like" type="submit">
                         <div class="circle">
-                            <Icon width="24" height="24" name="like" class={tweet.liked ? 'liked' : ''} />
+                            <Icon width="24" height="24" name="like" class={comment.liked ? 'liked' : ''} />
                         </div>
                         <span class="count">
-              {#key tweet.likes}
-                {#if tweet.likes}
+
+                {#if comment.likes}
                   <div in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
-                    {tweet.likes}
+                    {comment.likes}
                   </div>
                 {/if}
-              {/key}
             </span>
                     </button>
                 </form>
 
-                <a href="/home/tweets/{tweet.url}" class="permalink" title="Permalink">
-                    <div class="circle">
-                        <Icon width="24" height="24" name="permalink" />
-                    </div>
-                </a>
-
-                {#if tweet.author.id === $page.data.profile.id}
+                {#if comment.author.id === $page.data.profile.id}
                     <button
                             aria-label="Remove tweet"
                             class="btn remove"
                             title="Remove"
-                            on:click={() => deleteHandel(tweet.id)}
+                            on:click={() => deleteHandel(comment.id)}
                     >
                         <div class="circle">
                             <Icon width="24" height="24" name="remove" />

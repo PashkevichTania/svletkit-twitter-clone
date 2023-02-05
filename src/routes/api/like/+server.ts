@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit'
 
-import { likeTweet } from 'src/utils/prisma'
-import { getErroMessage } from 'src/utils/error'
+import { likeTweet } from '$lib/prismaFunctions'
+import { getErroMessage } from '$lib/error'
 
 export const POST: RequestHandler = async ({ request }) => {
   let response

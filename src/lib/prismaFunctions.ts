@@ -1,6 +1,6 @@
 import type { User } from '@prisma/client'
 import prisma from '$lib/prisma'
-import { omit, parseCookie, timePosted } from 'src/utils/functions'
+import { omit, parseCookie, timePosted } from '$lib/functions'
 import { error } from '@sveltejs/kit'
 import type { FullUserProfile, GithubUserProfile, TweetType, UserProfile } from 'src/types'
 
@@ -22,7 +22,7 @@ export async function getTweets(request: Request): Promise<TweetType[]> {
       content: tweet.content,
       createdAt: timePosted(tweet.createdAt),
       author: tweet.author,
-      comments: tweet.comments,
+      comments: tweet.comments.length,
       likes: tweet.likedBy.length,
       liked: tweet.likedBy.some((user) => user.id === userId)
     }
@@ -38,7 +38,16 @@ export async function getTweet(
 
   const tweet = await prisma.post.findFirst({
     where: { url: params.tweetUrl },
-    include: { author: true, comments: true, likedBy: true }
+    include: {
+      author: true,
+      likedBy: true,
+      comments: {
+        include: {
+          author: true,
+          likedBy: true
+        }
+      }
+    }
   })
 
   if (!tweet || !userId) return null
@@ -49,7 +58,14 @@ export async function getTweet(
     content: tweet.content,
     createdAt: timePosted(tweet.createdAt),
     author: tweet.author,
-    comments: tweet.comments,
+    comments: tweet.comments.map((comment) => ({
+      id: comment.id,
+      content: comment.content,
+      createdAt: comment.createdAt,
+      author: comment.author,
+      likes: comment.likedBy.length,
+      liked: comment.likedBy.some((user) => user.id === userId)
+    })),
     likes: tweet.likedBy.length,
     liked: tweet.likedBy.some((user) => user.id === userId)
   }
@@ -203,7 +219,7 @@ export async function getUserProfile(request: Request): Promise<FullUserProfile 
     content: tweet.content,
     createdAt: timePosted(tweet.createdAt),
     author: tweet.author,
-    comments: tweet.comments,
+    comments: tweet.comments.length,
     likes: tweet.likedBy.length,
     liked: tweet.likedBy.some((user) => user.id === profile.id)
   }))

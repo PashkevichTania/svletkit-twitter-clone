@@ -1,6 +1,12 @@
-import type { User, Comment } from '@prisma/client'
+import type { User, Comment as PrismaComment } from '@prisma/client'
 
 export type UserProfile = User
+
+export type Comment = Omit<PrismaComment, 'postId' | 'authorId'> & {
+  author: UserProfile
+  likes: number
+  liked: boolean
+}
 
 export type FullUserProfile = User & { tweets: TweetType[] }
 
@@ -10,7 +16,8 @@ export type TweetType = {
   content: string
   createdAt: string
   author: UserProfile
-  comments: Comment[]
+  //FIXME:
+  comments: number | Comment[]
   likes: number
   liked: boolean
 }

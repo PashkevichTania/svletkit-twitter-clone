@@ -63,21 +63,22 @@
             </div>
             <span class="count">
               {#key tweet.likes}
-                {#if tweet.likes}
                   <div in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
                     {tweet.likes}
                   </div>
-                {/if}
               {/key}
             </span>
           </button>
         </form>
 
-        <a href="/home/tweets/{tweet.url}" class="permalink" title="Permalink">
-          <div class="circle">
-            <Icon width="24" height="24" name="permalink" />
-          </div>
-        </a>
+          <a href="/home/tweets/{tweet.url}" class="comment" title="Comments">
+            <div class="circle">
+              <Icon width="24" height="24" name="permalink" />
+            </div>
+            <span class="count" in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
+              {typeof tweet.comments === 'number' ? tweet.comments : tweet.comments.length}
+            </span>
+          </a>
 
         {#if tweet.author.id === $page.data.profile.id}
           <button
@@ -181,7 +182,8 @@
     fill: hsl(9 100% 64%);
   }
 
-  .like {
+  .like,
+  .comment{
     display: flex;
     align-items: center;
   }
@@ -194,11 +196,11 @@
     background: hsla(9 100% 64% / 10%);
   }
 
-  .permalink:hover {
+  .comment:hover {
     color: hsl(120 100% 40%);
   }
 
-  .permalink:hover .circle {
+  .comment:hover .circle {
     background-color: hsla(120 100% 50% / 4%);
   }
 
@@ -212,7 +214,7 @@
 
   .like,
   .remove,
-  .permalink {
+  .comment {
     width: 80px;
   }
 

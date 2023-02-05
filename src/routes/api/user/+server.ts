@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit'
-import { editUserProfile, getUserProfile } from 'src/utils/prisma'
-import { getErroMessage } from 'src/utils/error'
+import { editUserProfile, getUserProfile } from '$lib/prismaFunctions'
+import { getErroMessage } from '$lib/error'
 
 export const GET: RequestHandler = async ({ request }) => {
   const user = await getUserProfile(request)

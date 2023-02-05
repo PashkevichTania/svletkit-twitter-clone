@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit'
-import { getTweet } from 'src/utils/prisma'
+import { getTweet } from '$lib/prismaFunctions'
 
 export const GET: RequestHandler = async ({ request, params }) => {
   const tweet = await getTweet(request, params as Record<string, string>)
