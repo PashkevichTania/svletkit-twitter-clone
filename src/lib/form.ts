@@ -1,6 +1,3 @@
-import { page } from '$app/stores'
-import { get } from 'svelte/store'
-
 type Parameters = {
   result?: ({ form }: { form: HTMLFormElement }) => void
 }
@@ -16,10 +13,10 @@ export const enhance: Enhance = (form, { result } = {}) => {
     //   invalidatePath = path.url
     // })
 
-    const userId = get(page).data?.profile.id || 1
+    // const userId = get(page).data?.profile.id || 1
     event.preventDefault()
     const formData = new FormData(form)
-    formData.set('userId', userId.toString())
+    // formData.set('userId', userId.toString())
 
     console.debug(...formData)
 

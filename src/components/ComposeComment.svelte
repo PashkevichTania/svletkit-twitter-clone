@@ -8,10 +8,11 @@
 
   $: profile = $page.data.profile
 
-  let tweet = ''
-  let maxCharacters = 140
+  export let tweetId: number
+  let comment = ''
+  let maxCharacters = 40
 
-  $: charactersLeft = maxCharacters - tweet.length
+  $: charactersLeft = maxCharacters - comment.length
 
   const client = useQueryClient()
   const user = createQuery<FullUserProfile, Error>({
@@ -23,20 +24,20 @@
 <div class="compose">
   <img src={$user.data?.avatar || profile.avatar} alt="Avatar" />
   <form
-    action="/api/tweets"
+    action="/api/comments"
     method="POST"
     autocomplete="off"
     use:enhance={{
       result: ({ form }) => {
-        client.invalidateQueries([CONST.QUERY_KEYS.tweets])
         form.reset()
       }
     }}
   >
+    <input type="hidden" name="tweetId" value={tweetId} />
     <input
-      aria-label="Enter your Tweet"
-      bind:value={tweet}
-      name="tweet"
+      aria-label="Enter your comment"
+      bind:value={comment}
+      name="comment"
       placeholder="What's your hot take?"
       type="text"
     />
@@ -46,7 +47,7 @@
       disabled={charactersLeft <= 0}
       type="submit"
     >
-      {charactersLeft === maxCharacters ? 'Tweet' : charactersLeft}
+      {charactersLeft === maxCharacters ? 'Comment' : charactersLeft}
     </button>
   </form>
 </div>

@@ -1,13 +1,13 @@
 <script lang="ts">
-  import {fetchUser} from "$lib/data";
-  import {createQuery} from "@tanstack/svelte-query";
-  import type {FullUserProfile} from "src/types";
+  import { fetchUser } from '$lib/data'
+  import { createQuery } from '@tanstack/svelte-query'
+  import type { FullUserProfile } from 'src/types'
   import { fly } from 'svelte/transition'
   import { CONST } from 'src/constants'
 
-  import { signIn, signOut } from "@auth/sveltekit/client"
+  import { signIn, signOut } from '@auth/sveltekit/client'
 
-  import { page } from "$app/stores"
+  import { page } from '$app/stores'
 
   $: sessionUser = $page.data.session?.user
   const user = createQuery<FullUserProfile, Error>({
@@ -34,15 +34,15 @@
     {#if sessionUser}
       <div class="user">
         <div class="user-data">
-          <img class="hero" src={$user.data?.avatar || sessionUser.image} alt="user avatar">
-          <h2>{$user.data?.name ||sessionUser.name}</h2>
+          <img class="hero" src={$user.data?.avatar || sessionUser.image} alt="user avatar" />
+          <h2>{$user.data?.name || sessionUser.name}</h2>
         </div>
         <button class="btn" on:click={() => signOut()}>Sign out</button>
       </div>
       <a class="btn" href="/home">🔥 Share Cringe</a>
     {:else}
       <h2>Please sign in to share cringe</h2>
-      <button class="btn" on:click={() => signIn("github")}>Sign In with GitHub</button>
+      <button class="btn" on:click={() => signIn('github')}>Sign In with GitHub</button>
     {/if}
   </section>
 </main>
@@ -55,7 +55,7 @@
     margin-right: 25px;
   }
 
-  .user-data{
+  .user-data {
     display: flex;
     flex-direction: row;
     align-items: center;

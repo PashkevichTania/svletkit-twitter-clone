@@ -49,7 +49,7 @@ useQuery -> createQuery
 useQueries -> createQueries
 useMutation -> createMutation
 
-1. npx prisma init (create prisma folder) 
+1. npx prisma init (create prisma folder)
 2. npx prisma generate (generates assets like Prisma Client)
 3. npx prisma db push (pushes the state of your Prisma schema file to the database without using migrations. It creates the database if the database does not exist.)
 4. npx prisma db seed (adds data to DB)

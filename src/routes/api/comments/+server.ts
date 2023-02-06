@@ -1,30 +1,12 @@
 import type { RequestHandler } from '@sveltejs/kit'
 
-import { createTweet, getTweets, removeTweet } from '$lib/prisma/tweet'
+import { createComment, removeComment } from '$lib/prisma/comment'
 import { getErroMessage } from '$lib/error'
-
-export const GET: RequestHandler = async ({ request }) => {
-  const tweets = await getTweets(request)
-
-  if (!tweets.length) {
-    return new Response('There is no tweets', {
-      headers: { 'Content-Type': 'application/json' },
-      status: 400
-    })
-  }
-
-  return new Response(JSON.stringify(tweets), {
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    status: 200
-  })
-}
 
 export const POST: RequestHandler = async ({ request }) => {
   let response
   try {
-    await createTweet(request)
+    await createComment(request)
     response = new Response('Success', {
       headers: {
         'Content-Type': 'application/json'
@@ -44,7 +26,7 @@ export const POST: RequestHandler = async ({ request }) => {
 }
 
 export const DELETE: RequestHandler = async ({ request }) => {
-  await removeTweet(request)
+  await removeComment(request)
 
   return new Response('Success', {
     status: 200

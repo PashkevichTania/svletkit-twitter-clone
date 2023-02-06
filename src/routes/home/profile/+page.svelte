@@ -1,59 +1,59 @@
 <script lang="ts">
-    import {page} from "$app/stores"
-    import {fetchUser} from "$lib/data";
-    import {createQuery} from "@tanstack/svelte-query";
-    import Icon from 'src/components/Icon.svelte'
-    import Tweet from 'src/components/Tweet.svelte'
-    import {CONST} from "src/constants";
-    import type {FullUserProfile} from "src/types";
+  import { page } from '$app/stores'
+  import { fetchUser } from '$lib/data'
+  import { createQuery } from '@tanstack/svelte-query'
+  import Icon from 'src/components/Icon.svelte'
+  import Tweet from 'src/components/Tweet.svelte'
+  import { CONST } from 'src/constants'
+  import type { FullUserProfile } from 'src/types'
 
-    $: profile = $page.data.profile
+  $: profile = $page.data.profile
 
-    const user = createQuery<FullUserProfile, Error>({
-        queryKey: [CONST.QUERY_KEYS.user],
-        queryFn: () => fetchUser(profile.email)
-    })
+  const user = createQuery<FullUserProfile, Error>({
+    queryKey: [CONST.QUERY_KEYS.user],
+    queryFn: () => fetchUser(profile.email)
+  })
 </script>
 
 <svelte:head>
-    <title>{$user.data.name} ({$user.data.handle})</title>
+  <title>{$user.data.name} ({$user.data.handle})</title>
 </svelte:head>
 
 {#if $user.status === 'loading'}
-    <span>Loading tweets...</span>
+  <span>Loading tweets...</span>
 {:else if $user.status === 'error'}
-    <span>Error: {$user.error.message}</span>
+  <span>Error: {$user.error.message}</span>
 {:else}
-    <div class="profile">
-        <img class="banner" src={$user.data.banner || '/profile/banner_bg.jpeg'} alt="Profile banner"/>
-        <img class="avatar" src={$user.data.avatar} alt={$user.data.name}/>
-        <div class="edit">
-            <a class="edit_btn" href="/home/profile/edit" sveltekit:prefetch>
-                <Icon width="32" height="32" name="edit"/>
-                <span>Edit</span>
-            </a>
-        </div>
+  <div class="profile">
+    <img class="banner" src={$user.data.banner || '/profile/banner_bg.jpeg'} alt="Profile banner" />
+    <img class="avatar" src={$user.data.avatar} alt={$user.data.name} />
+    <div class="edit">
+      <a class="edit_btn" href="/home/profile/edit" sveltekit:prefetch>
+        <Icon width="32" height="32" name="edit" />
+        <span>Edit</span>
+      </a>
     </div>
+  </div>
 
-    <div class="content">
-        <div class="user">
-            <span class="name">{$user.data.name}</span>
-            <span class="handle">{$user.data.handle}</span>
-        </div>
-        <div class="about">
-            <span>About: {$user.data.about}</span>
-        </div>
+  <div class="content">
+    <div class="user">
+      <span class="name">{$user.data.name}</span>
+      <span class="handle">{$user.data.handle}</span>
     </div>
-
-    <div class="tweets">
-        <p>Tweets: {$user.data.tweets.length || 0}</p>
-
-        {#if $user.data.tweets}
-            {#each $user.data.tweets as tweet (tweet.id)}
-                <Tweet {tweet}/>
-            {/each}
-        {/if}
+    <div class="about">
+      <span>About: {$user.data.about}</span>
     </div>
+  </div>
+
+  <div class="tweets">
+    <p>Tweets: {$user.data.tweets.length || 0}</p>
+
+    {#if $user.data.tweets}
+      {#each $user.data.tweets as tweet (tweet.id)}
+        <Tweet {tweet} />
+      {/each}
+    {/if}
+  </div>
 {/if}
 
 <style lang="scss">

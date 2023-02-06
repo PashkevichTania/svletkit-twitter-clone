@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types'
-import { getUserProfileInitial } from '$lib/prismaFunctions'
+import { getUserProfileInitial } from '$lib/prisma/user'
 import type { GithubUserProfile } from 'src/types'
 
 export const load: LayoutServerLoad = async (event) => {

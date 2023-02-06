@@ -1,12 +1,12 @@
 import type { RequestHandler } from '@sveltejs/kit'
 
-import { likeTweet } from '$lib/prismaFunctions'
+import { likeComment } from '$lib/prisma/like'
 import { getErroMessage } from '$lib/error'
 
 export const POST: RequestHandler = async ({ request }) => {
   let response
   try {
-    await likeTweet(request)
+    await likeComment(request)
     response = new Response('Success', {
       headers: { 'Content-Type': 'application/json' },
       status: 200

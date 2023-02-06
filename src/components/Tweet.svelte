@@ -1,7 +1,7 @@
 <script lang="ts">
-  import {page} from "$app/stores";
+  import { page } from '$app/stores'
   import { PUBLIC_BASE_URL } from '$env/static/public'
-  import {CONST} from "src/constants";
+  import { CONST } from 'src/constants'
 
   import { fade, fly } from 'svelte/transition'
 
@@ -52,10 +52,16 @@
       </div>
 
       <div class="actions">
-        <form action="/api/like" method="POST"  use:enhance={{ result: () => {
-            client.invalidateQueries([CONST.QUERY_KEYS.tweets])
-            client.invalidateQueries([CONST.QUERY_KEYS.user])
-        }}}>
+        <form
+          action="/api/like/tweet"
+          method="POST"
+          use:enhance={{
+            result: () => {
+              client.invalidateQueries([CONST.QUERY_KEYS.tweets])
+              client.invalidateQueries([CONST.QUERY_KEYS.user])
+            }
+          }}
+        >
           <input type="hidden" name="tweetId" value={tweet.id} />
           <button class="btn like" title="Like" type="submit">
             <div class="circle">
@@ -63,29 +69,29 @@
             </div>
             <span class="count">
               {#key tweet.likes}
-                  <div in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
-                    {tweet.likes}
-                  </div>
+                <div in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
+                  {tweet.likes}
+                </div>
               {/key}
             </span>
           </button>
         </form>
 
-          <a href="/home/tweets/{tweet.url}" class="comment" title="Comments">
-            <div class="circle">
-              <Icon width="24" height="24" name="permalink" />
-            </div>
-            <span class="count" in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
-              {typeof tweet.comments === 'number' ? tweet.comments : tweet.comments.length}
-            </span>
-          </a>
+        <a href="/home/tweets/{tweet.url}" class="comment" title="Comments">
+          <div class="circle">
+            <Icon width="24" height="24" name="permalink" />
+          </div>
+          <span class="count" in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
+            {typeof tweet.comments === 'number' ? tweet.comments : tweet.comments.length}
+          </span>
+        </a>
 
         {#if tweet.author.id === $page.data.profile.id}
           <button
-                  aria-label="Remove tweet"
-                  class="btn remove"
-                  title="Remove"
-                  on:click={() => deleteHandel(tweet.id)}
+            aria-label="Remove tweet"
+            class="btn remove"
+            title="Remove"
+            on:click={() => deleteHandel(tweet.id)}
           >
             <div class="circle">
               <Icon width="24" height="24" name="remove" />
@@ -183,7 +189,7 @@
   }
 
   .like,
-  .comment{
+  .comment {
     display: flex;
     align-items: center;
   }

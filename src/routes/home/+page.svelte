@@ -2,7 +2,7 @@
   import { createQuery } from '@tanstack/svelte-query'
   import Compose from 'src/components/Compose.svelte'
   import Tweet from 'src/components/Tweet.svelte'
-  import {CONST} from "src/constants";
+  import { CONST } from 'src/constants'
   import type { TweetType } from 'src/types'
   import { fetchTweets } from 'src/lib/data'
 
