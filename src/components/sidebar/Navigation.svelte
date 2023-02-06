@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import Icon from 'src/components/Icon.svelte'
+  import { faHouse, faUser, faGear, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
   import { CONST } from 'src/constants.js'
+  import Fa from 'svelte-fa/src/fa.svelte'
 
   $: path = $page.url.pathname
 </script>
@@ -15,25 +16,25 @@
         </li>
         <li class:active={path === '/home'}>
           <a href="/home" sveltekit:prefetch>
-            <Icon width="32" height="32" name="home" />
+            <Fa size="lg" icon={faHouse} />
             <span>Home</span>
           </a>
         </li>
         <li class:active={path === '/home/profile/'}>
           <a href="/home/profile/" sveltekit:prefetch>
-            <Icon width="32" height="32" name="profile" />
+            <Fa size="lg" icon={faUser} />
             <span>Profile</span>
           </a>
         </li>
         <li class:active={path === '/home/settings'}>
           <a href="/home/settings" sveltekit:prefetch>
-            <Icon width="32" height="32" name="settings" />
+            <Fa size="lg" icon={faGear} />
             <span>Settings</span>
           </a>
         </li>
         <li class:active={path === '/home/about'}>
           <a href="/home/about" sveltekit:prefetch>
-            <Icon width="32" height="32" name="about" />
+            <Fa size="lg" icon={faCircleInfo} />
             <span>About</span>
           </a>
         </li>

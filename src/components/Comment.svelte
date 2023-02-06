@@ -1,13 +1,15 @@
 <script lang="ts">
+  import Fa from 'svelte-fa/src/fa.svelte'
+  import { faHeart, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+  import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
   import { page } from '$app/stores'
   import { PUBLIC_BASE_URL } from '$env/static/public'
-  import {timePosted} from "$lib/functions.js";
-  import {CONST} from "src/constants";
+  import { timePosted } from '$lib/functions.js'
+  import { CONST } from 'src/constants'
 
   import { fade, fly } from 'svelte/transition'
 
   import { enhance } from 'src/lib/form'
-  import Icon from 'src/components/Icon.svelte'
   import type { Comment } from 'src/types'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
 
@@ -32,21 +34,19 @@
   }
 </script>
 
-<article class="tweet-container" transition:fade>
-  <a class="avatar" href="/home/profile/{comment.author.name}">
+<article class="comment-container" transition:fade>
+  <div class="avatar">
     <img width="140" height="140" src={comment.author.avatar} alt={comment.author.name} />
-  </a>
+  </div>
 
-  <div class="tweet-details">
+  <div class="comment-details">
     <div>
-      <a href="/home/profile/{comment.author.name}" class="user">
-        {comment.author.name}
-      </a>
+      <span class="user">{comment.author.name}</span>
       <span class="handle">{comment.author.handle}</span>
       <span class="posted"> · {timePosted(comment.createdAt)}</span>
     </div>
 
-    <div class="tweet">
+    <div class="comment">
       <div class="content">
         {comment.content}
       </div>
@@ -64,23 +64,27 @@
           <input type="hidden" name="commentId" value={comment.id} />
           <button class="btn like" title="Like" type="submit">
             <div class="circle">
-              <Icon width="24" height="24" name="like" class={comment.liked ? 'liked' : ''} />
+              <Fa
+                size="lg"
+                icon={comment.liked ? faHeartSolid : faHeart}
+                class={comment.liked ? 'liked' : ''}
+              />
             </div>
             <span class="count" in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
-                {comment.likes}
+              {comment.likes}
             </span>
           </button>
         </form>
 
         {#if comment.author.id === $page.data.profile.id}
           <button
-            aria-label="Remove tweet"
+            aria-label="Remove comment"
             class="btn remove"
             title="Remove"
             on:click={() => deleteHandel(comment.id)}
           >
             <div class="circle">
-              <Icon width="24" height="24" name="remove" />
+              <Fa size="lg" icon={faTrashCan} />
             </div>
           </button>
         {/if}
@@ -105,11 +109,11 @@
     padding: var(--spacing-16);
   }
 
-  .tweet-container:hover {
+  .comment-container:hover {
     background-color: var(--color-bg-secondary);
   }
 
-  .tweet-container {
+  .comment-container {
     display: grid;
     grid-template-columns: min-content 1fr;
     gap: var(--spacing-16);
@@ -117,11 +121,11 @@
     transition: all 0.3s;
   }
 
-  .tweet-container:not(:last-child) {
+  .comment-container:not(:last-child) {
     border-bottom: 1px solid var(--color-border-primary);
   }
 
-  .tweet-details {
+  .comment-details {
     display: grid;
     gap: var(--spacing-8);
   }
@@ -151,7 +155,7 @@
     margin-top: var(--spacing-16);
   }
 
-  .actions button{
+  .actions button {
     padding: 0;
     color: var(--color-text-muted);
     background: none;
@@ -195,7 +199,7 @@
   }
 
   .like,
-  .remove{
+  .remove {
     width: 80px;
   }
 

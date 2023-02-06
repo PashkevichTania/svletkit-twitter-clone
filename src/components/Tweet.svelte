@@ -1,13 +1,16 @@
 <script lang="ts">
+  import Fa from 'svelte-fa/src/fa.svelte'
+  import { faComment, faHeart, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+  import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
+
   import { page } from '$app/stores'
   import { PUBLIC_BASE_URL } from '$env/static/public'
-  import {timePosted} from "$lib/functions.js";
+  import { timePosted } from '$lib/functions.js'
   import { CONST } from 'src/constants'
 
   import { fade, fly } from 'svelte/transition'
 
   import { enhance } from 'src/lib/form'
-  import Icon from 'src/components/Icon.svelte'
   import type { TweetType } from 'src/types'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
 
@@ -34,15 +37,13 @@
 </script>
 
 <article class="tweet-container" transition:fade>
-  <a class="avatar" href="/home/profile/{tweet.author.name}">
+  <div class="avatar">
     <img width="140" height="140" src={tweet.author.avatar} alt={tweet.author.name} />
-  </a>
+  </div>
 
   <div class="tweet-details">
     <div>
-      <a href="/home/profile/{tweet.author.name}" class="user">
-        {tweet.author.name}
-      </a>
+      <span class="user">{tweet.author.name}</span>
       <span class="handle">{tweet.author.handle}</span>
       <span class="posted"> · {timePosted(tweet.createdAt)}</span>
     </div>
@@ -66,7 +67,11 @@
           <input type="hidden" name="tweetId" value={tweet.id} />
           <button class="btn like" title="Like" type="submit">
             <div class="circle">
-              <Icon width="24" height="24" name="like" class={tweet.liked ? 'liked' : ''} />
+              <Fa
+                size="lg"
+                icon={tweet.liked ? faHeartSolid : faHeart}
+                class={tweet.liked ? 'liked' : ''}
+              />
             </div>
             <span class="count">
               {#key tweet.likes}
@@ -80,7 +85,7 @@
 
         <a href="/home/tweets/{tweet.url}" class="comment" title="Comments">
           <div class="circle">
-            <Icon width="24" height="24" name="permalink" />
+            <Fa size="lg" icon={faComment} />
           </div>
           <span class="count" in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
             {typeof tweet.comments === 'number' ? tweet.comments : tweet.comments.length}
@@ -95,7 +100,7 @@
             on:click={() => deleteHandel(tweet.id)}
           >
             <div class="circle">
-              <Icon width="24" height="24" name="remove" />
+              <Fa size="lg" icon={faTrashCan} />
             </div>
           </button>
         {/if}

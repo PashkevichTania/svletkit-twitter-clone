@@ -1,8 +1,9 @@
 <script lang="ts">
+  import Fa from 'svelte-fa/src/fa.svelte'
+  import { faEdit } from '@fortawesome/free-regular-svg-icons'
   import { page } from '$app/stores'
   import { fetchUser } from '$lib/data'
   import { createQuery } from '@tanstack/svelte-query'
-  import Icon from 'src/components/Icon.svelte'
   import Tweet from 'src/components/Tweet.svelte'
   import { CONST } from 'src/constants'
   import type { FullUserProfile } from 'src/types'
@@ -29,7 +30,7 @@
     <img class="avatar" src={$user.data.avatar} alt={$user.data.name} />
     <div class="edit">
       <a class="edit_btn" href="/home/profile/edit" sveltekit:prefetch>
-        <Icon width="32" height="32" name="edit" />
+        <Fa size="lg" icon={faEdit} />
         <span>Edit</span>
       </a>
     </div>

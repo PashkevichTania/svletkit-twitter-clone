@@ -41,7 +41,10 @@
   "dependencies": {
     "@auth/core": "^0.2.5",
     "@auth/sveltekit": "^0.1.12",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@prisma/client": "^4.8.1",
-    "@tanstack/svelte-query": "^4.22.2"
+    "@tanstack/svelte-query": "^4.22.2",
+    "svelte-fa": "^3.0.3"
   }
 }

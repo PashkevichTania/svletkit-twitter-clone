@@ -37,7 +37,7 @@
       aria-label="Enter your Tweet"
       bind:value={tweet}
       name="tweet"
-      placeholder="What's your hot take?"
+      placeholder="Share something..."
       type="text"
     />
     <button

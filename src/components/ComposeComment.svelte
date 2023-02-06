@@ -39,7 +39,7 @@
       aria-label="Enter your comment"
       bind:value={comment}
       name="comment"
-      placeholder="What's your hot take?"
+      placeholder="Unleash a comment..."
       type="text"
     />
     <button
