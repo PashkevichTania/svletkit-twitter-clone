@@ -1,4 +1,4 @@
-import { parseCookie, timePosted } from '$lib/functions'
+import { parseCookie } from '$lib/functions'
 import prisma from '$lib/prisma/index'
 import { error } from '@sveltejs/kit'
 import type { TweetType } from 'src/types'
@@ -19,7 +19,7 @@ export async function getTweets(request: Request): Promise<TweetType[]> {
       id: tweet.id,
       url: tweet.url,
       content: tweet.content,
-      createdAt: timePosted(tweet.createdAt),
+      createdAt: tweet.createdAt,
       author: tweet.author,
       comments: tweet.comments.length,
       likes: tweet.likedBy.length,
@@ -55,7 +55,7 @@ export async function getTweet(
     id: tweet.id,
     url: tweet.url,
     content: tweet.content,
-    createdAt: timePosted(tweet.createdAt),
+    createdAt: tweet.createdAt,
     author: tweet.author,
     comments: tweet.comments.map((comment) => ({
       id: comment.id,

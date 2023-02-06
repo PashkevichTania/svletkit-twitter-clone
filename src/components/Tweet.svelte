@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores'
   import { PUBLIC_BASE_URL } from '$env/static/public'
+  import {timePosted} from "$lib/functions.js";
   import { CONST } from 'src/constants'
 
   import { fade, fly } from 'svelte/transition'
@@ -43,7 +44,7 @@
         {tweet.author.name}
       </a>
       <span class="handle">{tweet.author.handle}</span>
-      <span class="posted"> · {tweet.createdAt}</span>
+      <span class="posted"> · {timePosted(tweet.createdAt)}</span>
     </div>
 
     <div class="tweet">

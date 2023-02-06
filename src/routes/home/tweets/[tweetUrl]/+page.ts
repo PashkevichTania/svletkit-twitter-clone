@@ -1,13 +1,12 @@
-import { error } from '@sveltejs/kit'
+import { fetchTweet } from 'src/lib/data'
+import { CONST } from 'src/constants'
 import type { PageLoad } from './$types'
 
-export const load: PageLoad = async ({ fetch, params }) => {
-  const response = await fetch(`/home/tweets/${params.tweetUrl}`)
+export const load: PageLoad = async ({ params, parent }) => {
+  const { queryClient } = await parent()
 
-  if (response.status === 200) {
-    const tweet = response.json()
-    return { tweet }
-  }
-
-  throw error(404, 'Not found')
+  await queryClient.prefetchQuery({
+    queryKey: [CONST.QUERY_KEYS.tweets, params.tweetUrl],
+    queryFn: () => fetchTweet(params.tweetUrl)
+  })
 }

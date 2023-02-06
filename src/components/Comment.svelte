@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { invalidate } from '$app/navigation'
   import { page } from '$app/stores'
   import { PUBLIC_BASE_URL } from '$env/static/public'
-  import { CONST } from 'src/constants'
+  import {timePosted} from "$lib/functions.js";
+  import {CONST} from "src/constants";
 
   import { fade, fly } from 'svelte/transition'
 
@@ -22,7 +22,7 @@
       }),
     {
       onSuccess: () => {
-        invalidate($page.url)
+        client.invalidateQueries([CONST.QUERY_KEYS.tweets, $page.params.tweetUrl])
       }
     }
   )
@@ -43,7 +43,7 @@
         {comment.author.name}
       </a>
       <span class="handle">{comment.author.handle}</span>
-      <span class="posted"> · {comment.createdAt}</span>
+      <span class="posted"> · {timePosted(comment.createdAt)}</span>
     </div>
 
     <div class="tweet">
@@ -57,7 +57,7 @@
           method="POST"
           use:enhance={{
             result: () => {
-              invalidate($page.url)
+              client.invalidateQueries([CONST.QUERY_KEYS.tweets, $page.params.tweetUrl])
             }
           }}
         >
@@ -66,10 +66,8 @@
             <div class="circle">
               <Icon width="24" height="24" name="like" class={comment.liked ? 'liked' : ''} />
             </div>
-            <span class="count">
-              <div in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
+            <span class="count" in:fly={{ y: 40 }} out:fly={{ y: 40 }}>
                 {comment.likes}
-              </div>
             </span>
           </button>
         </form>
@@ -153,8 +151,7 @@
     margin-top: var(--spacing-16);
   }
 
-  .actions button,
-  .actions a {
+  .actions button{
     padding: 0;
     color: var(--color-text-muted);
     background: none;
@@ -189,14 +186,6 @@
     background: hsla(9 100% 64% / 10%);
   }
 
-  .permalink:hover {
-    color: hsl(120 100% 40%);
-  }
-
-  .permalink:hover .circle {
-    background-color: hsla(120 100% 50% / 4%);
-  }
-
   .remove:hover {
     color: hsl(0 100% 50%);
   }
@@ -206,8 +195,7 @@
   }
 
   .like,
-  .remove,
-  .permalink {
+  .remove{
     width: 80px;
   }
 

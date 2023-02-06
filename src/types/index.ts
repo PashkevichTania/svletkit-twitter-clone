@@ -14,7 +14,7 @@ export type TweetType = {
   id: number
   url: string
   content: string
-  createdAt: string
+  createdAt: Date
   author: UserProfile
   //FIXME:
   comments: number | Comment[]
