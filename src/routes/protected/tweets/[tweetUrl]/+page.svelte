@@ -1,9 +1,9 @@
 <script>
   import { page } from '$app/stores'
   import { createQuery } from '@tanstack/svelte-query'
-  import Comment from 'src/components/Comment.svelte'
-  import ComposeComment from 'src/components/ComposeComment.svelte'
-  import Tweet from 'src/components/Tweet.svelte'
+  import Comment from 'src/components/comment/Comment.svelte'
+  import Compose from 'src/components/comment/Compose.svelte'
+  import Tweet from 'src/components/tweet/Tweet.svelte'
   import { QUERY_KEYS } from 'src/constants'
   import { fetchTweet } from 'src/lib/data'
 
@@ -30,7 +30,7 @@
     </section>
   {/if}
   <div class="compose">
-    <ComposeComment tweetId={$tweet.data.id} />
+    <Compose tweetId={$tweet.data.id} />
   </div>
 {/if}
 

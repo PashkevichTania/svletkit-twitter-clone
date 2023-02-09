@@ -11,7 +11,7 @@
 
   import { fade, fly } from 'svelte/transition'
 
-  import { enhance } from 'src/lib/form'
+  import { enhance } from '$lib/form'
   import type { TweetType } from 'src/types'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
 

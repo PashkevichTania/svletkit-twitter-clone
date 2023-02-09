@@ -20,12 +20,12 @@ export const ROUTES = {
   },
   pages: {
     home: '/protected/home/',
-    tweets: '/protected/home/tweets/',
-    about: '/protected/home/about/',
-    profile: '/protected/home/profile',
-    profileEdit: '/protected/home/profile/edit/',
+    tweets: '/protected/tweets/',
+    about: '/protected/about/',
+    profile: '/protected/profile',
+    profileEdit: '/protected/profile/edit/',
     settings: {
-      index: '/protected/home/settings'
+      index: '/protected/settings'
     }
   }
 }

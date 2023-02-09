@@ -1,17 +1,18 @@
 <script lang="ts">
   import { fetchUser } from '$lib/data'
   import { QUERY_KEYS, ROUTES } from 'src/constants.js'
-  import { enhance } from 'src/lib/form'
+  import { enhance } from '$lib/form'
   import { page } from '$app/stores'
   import { createQuery, useQueryClient } from '@tanstack/svelte-query'
   import type { FullUserProfile } from 'src/types'
 
   $: profile = $page.data.profile
 
-  let tweet = ''
-  let maxCharacters = 140
+  export let tweetId: number
+  let comment = ''
+  let maxCharacters = 40
 
-  $: charactersLeft = maxCharacters - tweet.length
+  $: charactersLeft = maxCharacters - comment.length
 
   const client = useQueryClient()
   const user = createQuery<FullUserProfile, Error>({
@@ -23,22 +24,23 @@
 <div class="compose">
   <img src={$user.data?.avatar || profile.avatar} alt="Avatar" />
   <form
-    action={ROUTES.api.tweets}
+    action={ROUTES.api.comments}
     method="POST"
     autocomplete="off"
     use:enhance={{
       result: ({ form }) => {
-        client.invalidateQueries([QUERY_KEYS.tweets])
+        client.invalidateQueries([QUERY_KEYS.tweets, $page.params.tweetUrl])
         form.reset()
-        charactersLeft = 140
+        charactersLeft = 40
       }
     }}
   >
+    <input type="hidden" name="tweetId" value={tweetId} />
     <input
-      aria-label="Enter your Tweet"
-      bind:value={tweet}
-      name="tweet"
-      placeholder="Share something..."
+      aria-label="Enter your comment"
+      bind:value={comment}
+      name="comment"
+      placeholder="Unleash a comment..."
       type="text"
     />
     <button
@@ -47,7 +49,7 @@
       disabled={charactersLeft <= 0}
       type="submit"
     >
-      {charactersLeft === maxCharacters ? 'Tweet' : charactersLeft}
+      {charactersLeft === maxCharacters ? 'Comment' : charactersLeft}
     </button>
   </form>
 </div>
