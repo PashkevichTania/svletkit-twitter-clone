@@ -39,7 +39,7 @@
         </div>
         <button class="btn" on:click={() => signOut()}>Sign out</button>
       </div>
-      <a class="btn" href="/home">🔥 Share Cringe</a>
+      <a class="btn" href="/protected/home">🔥 Share Cringe</a>
     {:else}
       <h2>Please sign in to share cringe</h2>
       <button class="btn" on:click={() => signIn('github')}>Sign In with GitHub</button>

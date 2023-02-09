@@ -14,26 +14,26 @@
         <li>
           <a href="/" class="logo">{CONST.icon}️</a>
         </li>
-        <li class:active={path === '/home'}>
-          <a href="/home" sveltekit:prefetch>
+        <li class:active={path === '/protected/home'}>
+          <a href="/protected/home" sveltekit:prefetch>
             <Fa size="lg" icon={faHouse} />
             <span>Home</span>
           </a>
         </li>
-        <li class:active={path === '/home/profile/'}>
-          <a href="/home/profile/" sveltekit:prefetch>
+        <li class:active={path === '/protected/home/profile/'}>
+          <a href="/protected/home/profile/" sveltekit:prefetch>
             <Fa size="lg" icon={faUser} />
             <span>Profile</span>
           </a>
         </li>
-        <li class:active={path === '/home/settings'}>
-          <a href="/home/settings" sveltekit:prefetch>
+        <li class:active={path === '/protected/home/settings'}>
+          <a href="/protected/home/settings" sveltekit:prefetch>
             <Fa size="lg" icon={faGear} />
             <span>Settings</span>
           </a>
         </li>
-        <li class:active={path === '/home/about'}>
-          <a href="/home/about" sveltekit:prefetch>
+        <li class:active={path === '/protected/home/about'}>
+          <a href="/protected/home/about" sveltekit:prefetch>
             <Fa size="lg" icon={faCircleInfo} />
             <span>About</span>
           </a>

@@ -4,7 +4,7 @@
   import Tweet from 'src/components/Tweet.svelte'
   import { CONST } from 'src/constants'
   import type { TweetType } from 'src/types'
-  import { fetchTweets } from 'src/lib/data'
+  import { fetchTweets } from '$lib/data'
 
   const tweets = createQuery<TweetType[], Error>({
     queryKey: [CONST.QUERY_KEYS.tweets],

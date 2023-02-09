@@ -19,7 +19,7 @@
 
   const deleteMutation = createMutation(
     (id: number) =>
-      fetch(`${PUBLIC_BASE_URL}/api/comments?id=${id}`, {
+      fetch(`${PUBLIC_BASE_URL}/protected/api/comments?id=${id}`, {
         method: 'DELETE'
       }),
     {
@@ -53,7 +53,7 @@
 
       <div class="actions">
         <form
-          action="/api/like/comment"
+          action="/protected/api/like/comment"
           method="POST"
           use:enhance={{
             result: () => {

@@ -1,6 +1,6 @@
 import { CONST } from 'src/constants'
 import type { PageLoad } from './$types'
-import { fetchUser } from 'src/lib/data'
+import { fetchUser } from '$lib/data'
 
 export const load: PageLoad = async ({ parent }) => {
   const { profile, queryClient } = await parent()

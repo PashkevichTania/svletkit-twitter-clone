@@ -20,7 +20,7 @@
 
   const deleteMutation = createMutation(
     (id: number) =>
-      fetch(`${PUBLIC_BASE_URL}/api/tweets?id=${id}`, {
+      fetch(`${PUBLIC_BASE_URL}/protected/api/tweets?id=${id}`, {
         method: 'DELETE'
       }),
     {
@@ -55,7 +55,7 @@
 
       <div class="actions">
         <form
-          action="/api/like/tweet"
+          action="/protected/api/like/tweet"
           method="POST"
           use:enhance={{
             result: () => {
@@ -83,7 +83,7 @@
           </button>
         </form>
 
-        <a href="/home/tweets/{tweet.url}" class="comment" title="Comments">
+        <a href="/protected/home/tweets/{tweet.url}" class="comment" title="Comments">
           <div class="circle">
             <Fa size="lg" icon={faComment} />
           </div>

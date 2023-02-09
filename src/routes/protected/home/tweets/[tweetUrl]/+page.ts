@@ -1,4 +1,4 @@
-import { fetchTweet } from 'src/lib/data'
+import { fetchTweet } from '$lib/data'
 import { CONST } from 'src/constants'
 import type { PageLoad } from './$types'
 

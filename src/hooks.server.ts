@@ -14,7 +14,7 @@ interface Params {
 
 async function authorization({ event, resolve }: Params) {
   // Protect any routes under /protected
-  if (event.url.pathname.startsWith('/protected')) {
+  if (event.url.pathname.includes('protected')) {
     const session = await event.locals.getSession()
     if (!session) {
       throw redirect(303, '/')

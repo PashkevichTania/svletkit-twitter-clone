@@ -23,7 +23,7 @@
 <div class="compose">
   <img src={$user.data?.avatar || profile.avatar} alt="Avatar" />
   <form
-    action="/api/tweets"
+    action="/protected/api/tweets"
     method="POST"
     autocomplete="off"
     use:enhance={{

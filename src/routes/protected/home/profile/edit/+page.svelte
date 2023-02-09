@@ -14,7 +14,7 @@
 
 <div class="container">
   <h2>Edit profile</h2>
-  <form action="/api/user" method="POST" autocomplete="off">
+  <form action="/protected/api/user" method="POST" autocomplete="off">
     <div class="row">
       <p class="text">Name:</p>
       <input

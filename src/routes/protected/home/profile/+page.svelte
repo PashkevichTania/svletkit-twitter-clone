@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-  <title>{$user.data.name} ({$user.data.handle})</title>
+  <title>{$user.data?.name || ''} ({$user.data?.handle  || ''})</title>
 </svelte:head>
 
 {#if $user.status === 'loading'}
@@ -29,7 +29,7 @@
     <img class="banner" src={$user.data.banner || '/profile/banner_bg.jpeg'} alt="Profile banner" />
     <img class="avatar" src={$user.data.avatar} alt={$user.data.name} />
     <div class="edit">
-      <a class="edit_btn" href="/home/profile/edit" sveltekit:prefetch>
+      <a class="edit_btn" href="/protected/home/profile/edit" sveltekit:prefetch>
         <Fa size="lg" icon={faEdit} />
         <span>Edit</span>
       </a>

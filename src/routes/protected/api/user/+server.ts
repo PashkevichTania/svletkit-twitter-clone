@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({ request }) => {
     await editUserProfile(request)
     response = new Response('Success', {
       headers: {
-        Location: '/home/profile'
+        Location: '/protected/home/profile'
       },
       status: 302
     })

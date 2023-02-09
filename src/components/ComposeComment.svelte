@@ -24,7 +24,7 @@
 <div class="compose">
   <img src={$user.data?.avatar || profile.avatar} alt="Avatar" />
   <form
-    action="/api/comments"
+    action="/protected/api/comments"
     method="POST"
     autocomplete="off"
     use:enhance={{

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import Navigation from 'src/components/sidebar/Navigation.svelte'
 
   $: path = $page.url.pathname
 </script>
@@ -12,22 +11,22 @@
     <section class="privacy">
       <h2>Privacy</h2>
       <a
-        class:active={path === '/home/settings/personalization'}
-        href="/home/settings/personalization"
+        class:active={path === '/protected/home/settings/personalization'}
+        href="/protected/home/settings/personalization"
       >
         Personalization and data
       </a>
-      <a class:active={path === '/home/settings/data'} href="/home/settings/data"
+      <a class:active={path === '/protected/home/settings/data'} href="/protected/home/settings/data"
         >Your Twitter data</a
       >
-      <a class:active={path === '/home/settings/cookies'} href="/home/settings/cookies"
+      <a class:active={path === '/protected/home/settings/cookies'} href="/protected/home/settings/cookies"
         >Cookie preferences</a
       >
     </section>
 
     <section class="general">
       <h2>General</h2>
-      <a class:active={path === '/home/settings/resources'} href="/home/settings/resources">
+      <a class:active={path === '/protected/home/settings/resources'} href="/protected/home/settings/resources">
         Additional resources
       </a>
     </section>
