@@ -1,13 +1,3 @@
-<script lang="ts">
-  import { dev } from '$app/environment'
-
-  // load JavaScript in development for hot module replacement
-  export const hydrate = dev
-
-  // prerender static page in production
-  export const prerender = true
-</script>
-
 <svelte:head>
   <title>About</title>
 </svelte:head>
@@ -15,6 +5,9 @@
 <div class="container">
   <h1>About</h1>
   <div class="content">
+    <p>
+      This is a test website created to learn SvleteKit and Prisma.
+    </p>
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus eveniet quos impedit
       cumque, deleniti aspernatur atque vitae iusto ratione nam qui.
