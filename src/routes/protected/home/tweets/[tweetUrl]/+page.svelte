@@ -4,11 +4,11 @@
   import Comment from 'src/components/Comment.svelte'
   import ComposeComment from 'src/components/ComposeComment.svelte'
   import Tweet from 'src/components/Tweet.svelte'
-  import { CONST } from 'src/constants'
+  import { QUERY_KEYS } from 'src/constants'
   import { fetchTweet } from 'src/lib/data'
 
   const tweet = createQuery({
-    queryKey: [CONST.QUERY_KEYS.tweets, $page.params.tweetUrl],
+    queryKey: [QUERY_KEYS.tweets, $page.params.tweetUrl],
     queryFn: () => fetchTweet($page.params.tweetUrl)
   })
 </script>

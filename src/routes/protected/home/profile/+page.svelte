@@ -5,13 +5,13 @@
   import { fetchUser } from '$lib/data'
   import { createQuery } from '@tanstack/svelte-query'
   import Tweet from 'src/components/Tweet.svelte'
-  import { CONST } from 'src/constants'
+  import { QUERY_KEYS, ROUTES} from 'src/constants'
   import type { FullUserProfile } from 'src/types'
 
   $: profile = $page.data.profile
 
   const user = createQuery<FullUserProfile, Error>({
-    queryKey: [CONST.QUERY_KEYS.user],
+    queryKey: [QUERY_KEYS.user],
     queryFn: () => fetchUser(profile.email)
   })
 </script>
@@ -29,7 +29,7 @@
     <img class="banner" src={$user.data.banner || '/profile/banner_bg.jpeg'} alt="Profile banner" />
     <img class="avatar" src={$user.data.avatar} alt={$user.data.name} />
     <div class="edit">
-      <a class="edit_btn" href="/protected/home/profile/edit" sveltekit:prefetch>
+      <a class="edit_btn" href={ROUTES.pages.profileEdit} sveltekit:prefetch>
         <Fa size="lg" icon={faEdit} />
         <span>Edit</span>
       </a>

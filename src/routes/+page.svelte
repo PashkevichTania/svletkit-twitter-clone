@@ -3,7 +3,7 @@
   import { createQuery } from '@tanstack/svelte-query'
   import type { FullUserProfile } from 'src/types'
   import { fly } from 'svelte/transition'
-  import { CONST } from 'src/constants'
+  import {CONST, QUERY_KEYS, ROUTES} from 'src/constants'
 
   import { signIn, signOut } from '@auth/sveltekit/client'
 
@@ -11,7 +11,7 @@
 
   $: sessionUser = $page.data.session?.user
   const user = createQuery<FullUserProfile, Error>({
-    queryKey: [CONST.QUERY_KEYS.user],
+    queryKey: [QUERY_KEYS.user],
     queryFn: () => fetchUser(sessionUser?.email || '')
   })
 </script>
@@ -39,7 +39,7 @@
         </div>
         <button class="btn" on:click={() => signOut()}>Sign out</button>
       </div>
-      <a class="btn" href="/protected/home">🔥 Share Cringe</a>
+      <a class="btn" href={ROUTES.pages.home}>🔥 Share Cringe</a>
     {:else}
       <h2>Please sign in to share cringe</h2>
       <button class="btn" on:click={() => signIn('github')}>Sign In with GitHub</button>

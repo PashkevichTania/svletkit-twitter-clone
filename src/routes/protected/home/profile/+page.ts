@@ -1,4 +1,4 @@
-import { CONST } from 'src/constants'
+import { QUERY_KEYS } from 'src/constants'
 import type { PageLoad } from './$types'
 import { fetchUser } from '$lib/data'
 
@@ -7,7 +7,7 @@ export const load: PageLoad = async ({ parent }) => {
 
   if (profile?.email)
     await queryClient.prefetchQuery({
-      queryKey: [CONST.QUERY_KEYS.user],
+      queryKey: [QUERY_KEYS.user],
       queryFn: () => fetchUser(profile.email)
     })
 }

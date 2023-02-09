@@ -5,7 +5,7 @@
   import { page } from '$app/stores'
   import { PUBLIC_BASE_URL } from '$env/static/public'
   import { timePosted } from '$lib/functions.js'
-  import { CONST } from 'src/constants'
+  import { QUERY_KEYS, ROUTES } from 'src/constants'
 
   import { fade, fly } from 'svelte/transition'
 
@@ -19,12 +19,12 @@
 
   const deleteMutation = createMutation(
     (id: number) =>
-      fetch(`${PUBLIC_BASE_URL}/protected/api/comments?id=${id}`, {
+      fetch(`${PUBLIC_BASE_URL}${ROUTES.api.comments}?id=${id}`, {
         method: 'DELETE'
       }),
     {
       onSuccess: () => {
-        client.invalidateQueries([CONST.QUERY_KEYS.tweets, $page.params.tweetUrl])
+        client.invalidateQueries([QUERY_KEYS.tweets, $page.params.tweetUrl])
       }
     }
   )
@@ -53,11 +53,11 @@
 
       <div class="actions">
         <form
-          action="/protected/api/like/comment"
+          action={ROUTES.api.like.comment}
           method="POST"
           use:enhance={{
             result: () => {
-              client.invalidateQueries([CONST.QUERY_KEYS.tweets, $page.params.tweetUrl])
+              client.invalidateQueries([QUERY_KEYS.tweets, $page.params.tweetUrl])
             }
           }}
         >

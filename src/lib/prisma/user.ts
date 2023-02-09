@@ -52,7 +52,7 @@ export async function getUserProfile(request: Request): Promise<FullUserProfile 
     id: tweet.id,
     url: tweet.url,
     content: tweet.content,
-    createdAt: timePosted(tweet.createdAt),
+    createdAt: tweet.createdAt,
     author: tweet.author,
     comments: tweet.comments.length,
     likes: tweet.likedBy.length,

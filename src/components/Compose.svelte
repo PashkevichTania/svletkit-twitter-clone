@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fetchUser } from '$lib/data'
-  import { CONST } from 'src/constants.js'
+  import { QUERY_KEYS, ROUTES } from 'src/constants.js'
   import { enhance } from 'src/lib/form'
   import { page } from '$app/stores'
   import { createQuery, useQueryClient } from '@tanstack/svelte-query'
@@ -15,7 +15,7 @@
 
   const client = useQueryClient()
   const user = createQuery<FullUserProfile, Error>({
-    queryKey: [CONST.QUERY_KEYS.user],
+    queryKey: [QUERY_KEYS.user],
     queryFn: () => fetchUser(profile.email)
   })
 </script>
@@ -23,12 +23,12 @@
 <div class="compose">
   <img src={$user.data?.avatar || profile.avatar} alt="Avatar" />
   <form
-    action="/protected/api/tweets"
+    action={ROUTES.api.tweets}
     method="POST"
     autocomplete="off"
     use:enhance={{
       result: ({ form }) => {
-        client.invalidateQueries([CONST.QUERY_KEYS.tweets])
+        client.invalidateQueries([QUERY_KEYS.tweets])
         form.reset()
         charactersLeft = 140
       }

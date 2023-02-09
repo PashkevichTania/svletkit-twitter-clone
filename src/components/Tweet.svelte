@@ -7,7 +7,7 @@
   import {goto} from "$app/navigation";
   import { PUBLIC_BASE_URL } from '$env/static/public'
   import { timePosted } from '$lib/functions.js'
-  import { CONST } from 'src/constants'
+  import { QUERY_KEYS, ROUTES } from 'src/constants'
 
   import { fade, fly } from 'svelte/transition'
 
@@ -21,15 +21,15 @@
 
   const deleteMutation = createMutation(
     (id: number) =>
-      fetch(`${PUBLIC_BASE_URL}/protected/api/tweets?id=${id}`, {
+      fetch(`${PUBLIC_BASE_URL}${ROUTES.api.tweets}?id=${id}`, {
         method: 'DELETE'
       }),
     {
       onSuccess: () => {
-        client.invalidateQueries([CONST.QUERY_KEYS.tweets])
-        client.invalidateQueries([CONST.QUERY_KEYS.user])
+        client.invalidateQueries([QUERY_KEYS.tweets])
+        client.invalidateQueries([QUERY_KEYS.user])
         if ($page.url.pathname.includes(`/tweets/${tweet.url}`)){
-          goto('/protected/home')
+          goto(ROUTES.pages.home)
         }
       }
     }
@@ -59,12 +59,12 @@
 
       <div class="actions">
         <form
-          action="/protected/api/like/tweet"
+          action={ROUTES.api.like.tweet}
           method="POST"
           use:enhance={{
             result: () => {
-              client.invalidateQueries([CONST.QUERY_KEYS.tweets])
-              client.invalidateQueries([CONST.QUERY_KEYS.user])
+              client.invalidateQueries([QUERY_KEYS.tweets])
+              client.invalidateQueries([QUERY_KEYS.user])
             }
           }}
         >
@@ -87,7 +87,7 @@
           </button>
         </form>
 
-        <a href="/protected/home/tweets/{tweet.url}" class="comment" title="Comments">
+        <a href="{ROUTES.pages.tweets}{tweet.url}" class="comment" title="Comments">
           <div class="circle">
             <Fa size="lg" icon={faComment} />
           </div>

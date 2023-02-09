@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores'
   import { faHouse, faUser, faGear, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-  import { CONST } from 'src/constants.js'
+  import {CONST, ROUTES} from 'src/constants.js'
   import Fa from 'svelte-fa/src/fa.svelte'
 
   $: path = $page.url.pathname
@@ -14,26 +14,26 @@
         <li>
           <a href="/" class="logo">{CONST.icon}️</a>
         </li>
-        <li class:active={path === '/protected/home'}>
-          <a href="/protected/home" sveltekit:prefetch>
+        <li class:active={path === ROUTES.pages.home}>
+          <a href={ROUTES.pages.home} sveltekit:prefetch>
             <Fa size="lg" icon={faHouse} />
             <span>Home</span>
           </a>
         </li>
-        <li class:active={path === '/protected/home/profile/'}>
-          <a href="/protected/home/profile/" sveltekit:prefetch>
+        <li class:active={path === ROUTES.pages.profile}>
+          <a href={ROUTES.pages.profile} sveltekit:prefetch>
             <Fa size="lg" icon={faUser} />
             <span>Profile</span>
           </a>
         </li>
-        <li class:active={path === '/protected/home/settings'}>
-          <a href="/protected/home/settings" sveltekit:prefetch>
+        <li class:active={path === ROUTES.pages.settings}>
+          <a href={ROUTES.pages.settings.index} sveltekit:prefetch>
             <Fa size="lg" icon={faGear} />
             <span>Settings</span>
           </a>
         </li>
-        <li class:active={path === '/protected/home/about'}>
-          <a href="/protected/home/about" sveltekit:prefetch>
+        <li class:active={path === ROUTES.pages.about}>
+          <a href={ROUTES.pages.about} sveltekit:prefetch>
             <Fa size="lg" icon={faCircleInfo} />
             <span>About</span>
           </a>
