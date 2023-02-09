@@ -3,7 +3,7 @@
   import { createQuery } from '@tanstack/svelte-query'
   import type { FullUserProfile } from 'src/types'
   import { fly } from 'svelte/transition'
-  import {CONST, QUERY_KEYS, ROUTES} from 'src/constants'
+  import { CONST, QUERY_KEYS, ROUTES } from 'src/constants'
 
   import { signIn, signOut } from '@auth/sveltekit/client'
 

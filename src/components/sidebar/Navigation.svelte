@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores'
   import { faHouse, faUser, faGear, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-  import {CONST, ROUTES} from 'src/constants.js'
+  import { CONST, ROUTES } from 'src/constants.js'
   import Fa from 'svelte-fa/src/fa.svelte'
 
   $: path = $page.url.pathname

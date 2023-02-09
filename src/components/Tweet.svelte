@@ -4,7 +4,7 @@
   import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 
   import { page } from '$app/stores'
-  import {goto} from "$app/navigation";
+  import { goto } from '$app/navigation'
   import { PUBLIC_BASE_URL } from '$env/static/public'
   import { timePosted } from '$lib/functions.js'
   import { QUERY_KEYS, ROUTES } from 'src/constants'
@@ -28,7 +28,7 @@
       onSuccess: () => {
         client.invalidateQueries([QUERY_KEYS.tweets])
         client.invalidateQueries([QUERY_KEYS.user])
-        if ($page.url.pathname.includes(`/tweets/${tweet.url}`)){
+        if ($page.url.pathname.includes(`/tweets/${tweet.url}`)) {
           goto(ROUTES.pages.home)
         }
       }

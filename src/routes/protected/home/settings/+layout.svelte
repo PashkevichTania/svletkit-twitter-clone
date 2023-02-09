@@ -16,17 +16,22 @@
       >
         Personalization and data
       </a>
-      <a class:active={path === '/protected/home/settings/data'} href="/protected/home/settings/data"
-        >Your Twitter data</a
+      <a
+        class:active={path === '/protected/home/settings/data'}
+        href="/protected/home/settings/data">Your Twitter data</a
       >
-      <a class:active={path === '/protected/home/settings/cookies'} href="/protected/home/settings/cookies"
-        >Cookie preferences</a
+      <a
+        class:active={path === '/protected/home/settings/cookies'}
+        href="/protected/home/settings/cookies">Cookie preferences</a
       >
     </section>
 
     <section class="general">
       <h2>General</h2>
-      <a class:active={path === '/protected/home/settings/resources'} href="/protected/home/settings/resources">
+      <a
+        class:active={path === '/protected/home/settings/resources'}
+        href="/protected/home/settings/resources"
+      >
         Additional resources
       </a>
     </section>

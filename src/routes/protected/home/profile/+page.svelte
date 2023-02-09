@@ -5,7 +5,7 @@
   import { fetchUser } from '$lib/data'
   import { createQuery } from '@tanstack/svelte-query'
   import Tweet from 'src/components/Tweet.svelte'
-  import { QUERY_KEYS, ROUTES} from 'src/constants'
+  import { QUERY_KEYS, ROUTES } from 'src/constants'
   import type { FullUserProfile } from 'src/types'
 
   $: profile = $page.data.profile
@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-  <title>{$user.data?.name || ''} ({$user.data?.handle  || ''})</title>
+  <title>{$user.data?.name || ''} ({$user.data?.handle || ''})</title>
 </svelte:head>
 
 {#if $user.status === 'loading'}
