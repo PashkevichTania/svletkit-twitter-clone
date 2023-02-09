@@ -30,6 +30,7 @@
       result: ({ form }) => {
         client.invalidateQueries([CONST.QUERY_KEYS.tweets])
         form.reset()
+        charactersLeft = 140
       }
     }}
   >

@@ -31,6 +31,7 @@
       result: ({ form }) => {
         client.invalidateQueries([CONST.QUERY_KEYS.tweets, $page.params.tweetUrl])
         form.reset()
+        charactersLeft = 40
       }
     }}
   >

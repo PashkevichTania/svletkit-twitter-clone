@@ -109,5 +109,15 @@ export async function removeTweet(request: Request) {
       message: `Tweet with id ${tweetId} not found`
     })
 
+  await prisma.post.update({
+    where: { id: tweetId },
+    data: {
+      comments: {
+        deleteMany: {
+          postId: tweetId
+        }
+      }
+    }
+  })
   await prisma.post.delete({ where: { id: tweetId } })
 }
